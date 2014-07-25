@@ -1,4 +1,4 @@
-package com.thomas.vinecellar.data;
+package com.thomas.winecellar.data;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

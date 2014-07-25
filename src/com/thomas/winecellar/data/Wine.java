@@ -1,4 +1,4 @@
-package com.thomas.vinecellar.data;
+package com.thomas.winecellar.data;
 
 public class Wine {
 
