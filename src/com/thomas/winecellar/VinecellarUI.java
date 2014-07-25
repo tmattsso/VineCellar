@@ -21,7 +21,6 @@ public class VinecellarUI extends UI {
 	protected void init(VaadinRequest request) {
 
 		final String agent = getPage().getWebBrowser().getBrowserApplication();
-		System.out.println(agent);
 
 		if (agent.toLowerCase().contains("iphone")) {
 			setContent(new IphoneView());
