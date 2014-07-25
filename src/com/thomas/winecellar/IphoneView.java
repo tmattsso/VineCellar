@@ -27,4 +27,10 @@ public class IphoneView extends NavigationManager implements WineView {
 
 	}
 
+	@Override
+	public void showError(Exception e) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

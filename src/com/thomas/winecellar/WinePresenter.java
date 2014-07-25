@@ -1,7 +1,9 @@
 package com.thomas.winecellar;
 
+import java.sql.SQLException;
 import java.util.List;
 
+import com.thomas.winecellar.data.Backend;
 import com.thomas.winecellar.data.Wine;
 
 public class WinePresenter {
@@ -27,18 +29,26 @@ public class WinePresenter {
 	public void setComment(Wine w, String comment) {
 		w.setComment(comment);
 
-		save(w);
-
-		view.showDetails(w);
+		try {
+			save(w);
+			view.showDetails(w);
+		} catch (final SQLException e) {
+			e.printStackTrace();
+			view.showError(e);
+		}
 	}
 
 	public void add(Wine w) {
-		w = save(w);
-		view.showDetails(w);
+		try {
+			w = save(w);
+			view.showDetails(w);
+		} catch (final SQLException e) {
+			e.printStackTrace();
+			view.showError(e);
+		}
 	}
 
-	private Wine save(Wine w) {
-		// TODO Auto-generated method stub
-		return null;
+	private Wine save(Wine w) throws SQLException {
+		return Backend.save(w);
 	}
 }

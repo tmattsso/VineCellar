@@ -9,4 +9,6 @@ public interface WineView {
 	public void load(List<Wine> wines);
 
 	public void showDetails(Wine w);
+
+	public void showError(Exception e);
 }
