@@ -17,8 +17,7 @@ public class IphoneView extends NavigationManager implements WineView {
 
 	@Override
 	public void load(List<Wine> wines) {
-		// TODO Auto-generated method stub
-
+		navigateTo(new BrowseWinePanel(wines));
 	}
 
 	@Override

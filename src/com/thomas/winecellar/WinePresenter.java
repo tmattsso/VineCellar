@@ -12,6 +12,7 @@ public class WinePresenter {
 
 	public void init(WineView view) {
 		this.view = view;
+		view.load(Backend.getWines());
 	}
 
 	public List<String> getProducers() {
