@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>VineCellar</name>
+	<name>WineCellar</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -42,7 +42,7 @@
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>com.vaadin.integration.eclipse.widgetsetNature</nature>
-		<nature>org.apache.ivyde.eclipse.ivynature</nature>
 		<nature>org.eclipse.wst.jsdt.core.jsNature</nature>
+		<nature>org.apache.ivyde.eclipse.ivynature</nature>
 	</natures>
 </projectDescription>
