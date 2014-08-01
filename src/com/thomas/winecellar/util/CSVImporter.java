@@ -2,7 +2,8 @@ package com.thomas.winecellar.util;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -23,10 +24,10 @@ public class CSVImporter {
 
 		final Connection connection = DBTools.getConnection();
 
-		final BufferedReader reader = new BufferedReader(new FileReader(f));
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(
+				new FileInputStream(f), "ISO-8859-1"));
 
 		String line = null;
-		final StringBuilder stringBuilder = new StringBuilder();
 
 		// skip header
 		reader.readLine();
@@ -56,7 +57,7 @@ public class CSVImporter {
 				final String num = get(row, i++);
 				final String from = get(row, i++);
 				final String senast = get(row, i++);
-				final String bäst = get(row, i++);
+				final String best = get(row, i++);
 				final String WA = get(row, i++);
 				final String WS = get(row, i++);
 				final String LG = get(row, i++);
@@ -70,17 +71,25 @@ public class CSVImporter {
 					continue;
 				}
 
-				final PreparedStatement insert = connection.prepareStatement(
-						"INSERT INTO wines VALUES(?,?,?,?,?,?,?)",
-						java.sql.Statement.RETURN_GENERATED_KEYS);
+				final PreparedStatement insert = connection
+						.prepareStatement(
+								"INSERT INTO wines VALUES(?,?,?,?,?,?,?,DEFAULT,?,?,?,?,?)",
+								java.sql.Statement.RETURN_GENERATED_KEYS);
+				int col = 1;
 
-				insert.setString(1, name);
-				insert.setString(2, comment);
-				insert.setString(3, producer);
-				insert.setInt(4, parseType(type));
-				insert.setInt(5, getInt(num));
-				insert.setString(6, country);
-				insert.setInt(7, getInt(year));
+				insert.setString(col++, name);
+				insert.setString(col++, comment);
+				insert.setString(col++, producer);
+				insert.setInt(col++, parseType(type));
+				insert.setInt(col++, getInt(num));
+				insert.setString(col++, country);
+				insert.setInt(col++, getInt(year));
+
+				insert.setString(col++, area);
+				insert.setString(col++, from);
+				insert.setString(col++, senast);
+				insert.setString(col++, best);
+				insert.setString(col++, druvor);
 
 				insert.executeUpdate();
 
