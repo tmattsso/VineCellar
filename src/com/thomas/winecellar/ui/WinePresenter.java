@@ -20,7 +20,7 @@ public class WinePresenter {
 	}
 
 	public List<String> getCountries() {
-		return null;
+		return Backend.getCountryList();
 	}
 
 	public void wineSelected(Wine w) {
@@ -34,8 +34,7 @@ public class WinePresenter {
 			save(w);
 			view.showDetails(w);
 		} catch (final SQLException e) {
-			e.printStackTrace();
-			view.showError(e);
+			handleError(e);
 		}
 	}
 
@@ -44,12 +43,25 @@ public class WinePresenter {
 			w = save(w);
 			view.showDetails(w);
 		} catch (final SQLException e) {
-			e.printStackTrace();
-			view.showError(e);
+			handleError(e);
 		}
 	}
 
 	private Wine save(Wine w) throws SQLException {
 		return Backend.save(w);
+	}
+
+	public void addClicked() {
+		view.showEdit(new Wine());
+	}
+
+	public void searchClicked() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void handleError(Exception e) {
+		e.printStackTrace();
+		view.showError(e);
 	}
 }

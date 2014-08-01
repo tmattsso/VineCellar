@@ -57,15 +57,15 @@ public class Backend {
 							+ "name=?, comment=?, producer=?, type=?, amount=?, country=?, year=?"
 							+ " WHERE id=?");
 
-			prepareStatement.setString(0, w.getName());
-			prepareStatement.setString(1, w.getComment());
-			prepareStatement.setString(2, w.getProducer());
-			prepareStatement.setInt(3, w.getType().ordinal());
-			prepareStatement.setInt(4, w.getAmount());
-			prepareStatement.setString(5, w.getCountry());
-			prepareStatement.setInt(6, w.getYear());
+			prepareStatement.setString(1, w.getName());
+			prepareStatement.setString(2, w.getComment());
+			prepareStatement.setString(3, w.getProducer());
+			prepareStatement.setInt(4, w.getType().ordinal());
+			prepareStatement.setInt(5, w.getAmount());
+			prepareStatement.setString(6, w.getCountry());
+			prepareStatement.setInt(7, w.getYear());
 
-			prepareStatement.setInt(7, w.getId());
+			prepareStatement.setInt(8, w.getId());
 
 			prepareStatement.executeUpdate();
 
@@ -74,25 +74,51 @@ public class Backend {
 			final Connection connection = DBTools.getConnection();
 
 			final PreparedStatement prepareStatement = connection
-					.prepareStatement("INSERT INTO wines VALUES(null,?,?,?,?,?,?,?)");
+					.prepareStatement(
+							"INSERT INTO wines VALUES(?,?,?,?,?,?,?)",
+							java.sql.Statement.RETURN_GENERATED_KEYS);
 
-			prepareStatement.setString(0, w.getName());
-			prepareStatement.setString(1, w.getComment());
-			prepareStatement.setString(2, w.getProducer());
-			prepareStatement.setInt(3, w.getType().ordinal());
-			prepareStatement.setInt(4, w.getAmount());
-			prepareStatement.setString(5, w.getCountry());
-			prepareStatement.setInt(6, w.getYear());
+			prepareStatement.setString(1, w.getName());
+			prepareStatement.setString(2, w.getComment());
+			prepareStatement.setString(3, w.getProducer());
+			prepareStatement.setInt(4, w.getType().ordinal());
+			prepareStatement.setInt(5, w.getAmount());
+			prepareStatement.setString(6, w.getCountry());
+			prepareStatement.setInt(7, w.getYear());
 
-			prepareStatement.executeUpdate();
-			final ResultSet generatedKeys = prepareStatement.getGeneratedKeys();
+			final int result = prepareStatement.executeUpdate();
 
-			if (!generatedKeys.next()) {
+			if (result != 1) {
 				throw new SQLException("no primary key generated");
 			}
-			w.setId(generatedKeys.getInt(0));
+
+			final ResultSet generatedKeys = prepareStatement.getGeneratedKeys();
+			generatedKeys.next();
+			w.setId(generatedKeys.getInt(8));
 		}
 
 		return w;
+	}
+
+	public static List<String> getCountryList() {
+		try {
+			final Connection connection = DBTools.getConnection();
+
+			final PreparedStatement prepareStatement = connection
+					.prepareStatement("SELECT DISTINCT country FROM wines ORDER BY country ASC");
+			final ResultSet executeQuery = prepareStatement.executeQuery();
+
+			final List<String> countries = new ArrayList<String>();
+			while (executeQuery.next()) {
+				countries.add(executeQuery.getString("country"));
+			}
+
+			return countries;
+
+		} catch (final SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

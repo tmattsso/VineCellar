@@ -1,10 +1,8 @@
-package com.thomas.winecellar;
+package com.thomas.winecellar.ui;
 
 import java.util.List;
 
 import com.thomas.winecellar.data.Wine;
-import com.thomas.winecellar.ui.WinePresenter;
-import com.thomas.winecellar.ui.WineView;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
@@ -36,6 +34,12 @@ public class ComputerView extends VerticalLayout implements WineView {
 
 	@Override
 	public void showError(Exception e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void showEdit(Wine wine) {
 		// TODO Auto-generated method stub
 
 	}

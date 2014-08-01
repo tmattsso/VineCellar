@@ -2,7 +2,6 @@ package com.thomas.winecellar.ui;
 
 import javax.servlet.annotation.WebServlet;
 
-import com.thomas.winecellar.ComputerView;
 import com.thomas.winecellar.ui.iphone.IphoneView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;

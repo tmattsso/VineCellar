@@ -13,7 +13,7 @@ public class Wine {
 	private String comment;
 	private String country;
 	private WineType type;
-	private int amount = -1;
+	private int amount = 0;
 	private int year = -1;
 
 	@Override

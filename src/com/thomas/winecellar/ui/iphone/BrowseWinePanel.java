@@ -9,8 +9,6 @@ import com.vaadin.addon.touchkit.ui.NavigationButton.NavigationButtonClickEvent;
 import com.vaadin.addon.touchkit.ui.NavigationButton.NavigationButtonClickListener;
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.BaseTheme;
 
@@ -55,9 +53,7 @@ public class BrowseWinePanel extends NavigationView {
 			});
 		}
 
-		final Button search = new Button();
-		search.setIcon(FontAwesome.SEARCH);
-		getNavigationBar().setRightComponent(search);
+		setToolbar(new WineToolbar(presenter));
 	}
 
 	@Override
