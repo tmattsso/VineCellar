@@ -13,4 +13,6 @@ public interface WineView {
 	public void showError(Exception e);
 
 	public void showEdit(Wine wine);
+
+	public void showSearch();
 }

@@ -48,4 +48,9 @@ public class IphoneView extends NavigationManager implements WineView {
 		navigateTo(new WineDetailsPanel(wine, presenter, true));
 	}
 
+	@Override
+	public void showSearch() {
+		navigateTo(new SearchPanel(presenter));
+	}
+
 }

@@ -43,4 +43,10 @@ public class ComputerView extends VerticalLayout implements WineView {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void showSearch() {
+		// TODO Auto-generated method stub
+
+	}
 }

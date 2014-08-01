@@ -131,7 +131,10 @@ public class Backend {
 
 			final List<String> countries = new ArrayList<String>();
 			while (executeQuery.next()) {
-				countries.add(executeQuery.getString(col));
+				final String country = executeQuery.getString(col);
+				if (country != null && country.length() > 1) {
+					countries.add(country);
+				}
 			}
 
 			return countries;
@@ -149,5 +152,10 @@ public class Backend {
 
 	public static List<String> getRegionList() {
 		return getStringList("area");
+	}
+
+	public static List<Wine> getWines(SearchTerms terms) {
+		// TODO Auto-generated method stub
+		return getWines();
 	}
 }

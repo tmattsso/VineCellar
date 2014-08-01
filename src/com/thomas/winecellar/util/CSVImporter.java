@@ -85,9 +85,9 @@ public class CSVImporter {
 				insert.setString(col++, comment);
 				insert.setString(col++, producer);
 				insert.setInt(col++, parseType(type));
-				insert.setInt(col++, getInt(num));
+				insert.setInt(col++, ParseUtil.getInt(num));
 				insert.setString(col++, country);
-				insert.setInt(col++, getInt(year));
+				insert.setInt(col++, ParseUtil.getInt(year));
 
 				insert.setString(col++, area);
 				insert.setString(col++, from);
@@ -126,17 +126,6 @@ public class CSVImporter {
 			}
 		}
 		return content;
-	}
-
-	private static int getInt(String num) {
-		if (num == null) {
-			return 0;
-		}
-		num = num.replace("-", "");
-		if (num.equals("")) {
-			return 0;
-		}
-		return Integer.parseInt(num);
 	}
 
 	private static String get(String[] row, int i) {

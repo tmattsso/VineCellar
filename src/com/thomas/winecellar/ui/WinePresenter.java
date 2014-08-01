@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.thomas.winecellar.data.Backend;
+import com.thomas.winecellar.data.SearchTerms;
 import com.thomas.winecellar.data.Wine;
 
 public class WinePresenter {
@@ -56,8 +57,7 @@ public class WinePresenter {
 	}
 
 	public void searchClicked() {
-		// TODO Auto-generated method stub
-
+		view.showSearch();
 	}
 
 	public void handleError(Exception e) {
@@ -65,7 +65,13 @@ public class WinePresenter {
 		view.showError(e);
 	}
 
-	public Object getRegions() {
+	public List<String> getRegions() {
 		return Backend.getRegionList();
+	}
+
+	public void search(SearchTerms terms) {
+
+		final List<Wine> results = Backend.getWines(terms);
+		view.load(results);
 	}
 }
