@@ -101,16 +101,21 @@ public class Backend {
 	}
 
 	public static List<String> getCountryList() {
+		return getStringList("country");
+	}
+
+	private static List<String> getStringList(String col) {
 		try {
 			final Connection connection = DBTools.getConnection();
 
 			final PreparedStatement prepareStatement = connection
-					.prepareStatement("SELECT DISTINCT country FROM wines ORDER BY country ASC");
+					.prepareStatement("SELECT DISTINCT " + col
+							+ " FROM wines ORDER BY " + col + " ASC");
 			final ResultSet executeQuery = prepareStatement.executeQuery();
 
 			final List<String> countries = new ArrayList<String>();
 			while (executeQuery.next()) {
-				countries.add(executeQuery.getString("country"));
+				countries.add(executeQuery.getString(col));
 			}
 
 			return countries;
@@ -120,5 +125,9 @@ public class Backend {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static List<String> getProducerList() {
+		return getStringList("producer");
 	}
 }

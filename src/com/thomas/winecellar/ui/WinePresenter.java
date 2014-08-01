@@ -16,7 +16,7 @@ public class WinePresenter {
 	}
 
 	public List<String> getProducers() {
-		return null;
+		return Backend.getProducerList();
 	}
 
 	public List<String> getCountries() {
