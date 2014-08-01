@@ -11,10 +11,56 @@ public class Wine {
 	private String name;
 	private String producer;
 	private String comment;
+	private String region;
 	private String country;
 	private WineType type;
 	private int amount = 0;
 	private int year = -1;
+
+	private String drinkFrom;
+	private String drinkUntil;
+	private String drinkBest;
+	private String grapes;
+
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public String getDrinkFrom() {
+		return drinkFrom;
+	}
+
+	public void setDrinkFrom(String drinkFrom) {
+		this.drinkFrom = drinkFrom;
+	}
+
+	public String getDrinkUntil() {
+		return drinkUntil;
+	}
+
+	public void setDrinkUntil(String drinkUntil) {
+		this.drinkUntil = drinkUntil;
+	}
+
+	public String getDrinkBest() {
+		return drinkBest;
+	}
+
+	public void setDrinkBest(String drinkBest) {
+		this.drinkBest = drinkBest;
+	}
+
+	public String getGrapes() {
+		return grapes;
+	}
+
+	public void setGrapes(String grapes) {
+		this.grapes = grapes;
+	}
 
 	@Override
 	public boolean equals(Object obj) {

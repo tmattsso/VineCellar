@@ -36,9 +36,17 @@ public class Backend {
 		while (result.next()) {
 			final Wine w = new Wine();
 			w.setId(result.getInt("id"));
+			w.setYear(result.getInt("year"));
+			w.setAmount(result.getInt("amount"));
 			w.setComment(result.getString("comment"));
 			w.setName(result.getString("name"));
 			w.setProducer(result.getString("producer"));
+			w.setRegion(result.getString("area"));
+			w.setCountry(result.getString("country"));
+			w.setDrinkFrom(result.getString("drinkfrom"));
+			w.setDrinkUntil(result.getString("drinklast"));
+			w.setDrinkBest(result.getString("drinkbest"));
+			w.setGrapes(result.getString("grapes"));
 			w.setType(WineType.values()[result.getInt("type")]);
 			wines.add(w);
 		}
