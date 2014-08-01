@@ -53,7 +53,7 @@ public class CSVImporter {
 				final String[] row = line.split(";");
 				int i = 0;
 				final String type = get(row, i++);
-				final String name = get(row, i++);
+				String name = get(row, i++);
 				final String year = get(row, i++);
 				final String area = get(row, i++);
 				final String country = get(row, i++);
@@ -73,6 +73,10 @@ public class CSVImporter {
 
 					System.out.println("Skipped row " + rowNum);
 					continue;
+				}
+
+				if (name.length() == 0) {
+					name = "(not given)";
 				}
 
 				final PreparedStatement insert = connection
@@ -143,7 +147,7 @@ public class CSVImporter {
 			return WineType.CHAMPAGNE.ordinal();
 		}
 		if (type.toLowerCase().contains("mouss")) {
-			return WineType.MOUSSE.ordinal();
+			return WineType.SPARKLING.ordinal();
 		}
 		if (type.toLowerCase().contains("vitt")) {
 			return WineType.WHITE.ordinal();

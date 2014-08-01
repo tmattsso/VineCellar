@@ -18,7 +18,7 @@ public class ComputerView extends VerticalLayout implements WineView {
 	}
 
 	@Override
-	public void load(List<Wine> wines) {
+	public void load(List<Wine> wines, boolean searchResults) {
 		final Table t = new Table("wines", new BeanItemContainer<Wine>(
 				Wine.class, wines));
 		t.setSizeFull();

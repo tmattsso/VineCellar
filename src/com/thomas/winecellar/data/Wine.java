@@ -3,7 +3,28 @@ package com.thomas.winecellar.data;
 public class Wine {
 
 	public enum WineType {
-		WHITE, RED, ROSE, CHAMPAGNE, MOUSSE, SWEET
+		WHITE, RED, ROSE, CHAMPAGNE, SPARKLING, SWEET;
+
+		@Override
+		public String toString() {
+			switch (this) {
+			case WHITE:
+				return "White";
+			case RED:
+				return "Red";
+			case CHAMPAGNE:
+				return "Champagne";
+			case SPARKLING:
+				return "Sparkling";
+			case ROSE:
+				return "Rosé";
+			case SWEET:
+				return "Sweet";
+
+			default:
+				return null;
+			}
+		};
 	}
 
 	private int id = -1;

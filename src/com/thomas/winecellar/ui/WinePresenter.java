@@ -13,7 +13,7 @@ public class WinePresenter {
 
 	public void init(WineView view) {
 		this.view = view;
-		view.load(Backend.getWines());
+		view.load(Backend.getWines(), false);
 	}
 
 	public List<String> getProducers() {
@@ -72,6 +72,6 @@ public class WinePresenter {
 	public void search(SearchTerms terms) {
 
 		final List<Wine> results = Backend.getWines(terms);
-		view.load(results);
+		view.load(results, true);
 	}
 }

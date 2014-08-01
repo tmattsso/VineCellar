@@ -60,6 +60,7 @@ public class SearchPanel extends NavigationView {
 		hl.setWidth("100%");
 
 		final NumberField min = new NumberField();
+		// min.setSelectionRange(1900, 2030);
 		min.setMaxLength(4);
 		min.setWidth(5, Unit.EM);
 		hl.addComponent(min);
@@ -71,6 +72,7 @@ public class SearchPanel extends NavigationView {
 		hl.setExpandRatio(to, 1);
 
 		final NumberField max = new NumberField();
+		// max.setSelectionRange(1900, 2030);
 		max.setMaxLength(4);
 		max.setWidth(5, Unit.EM);
 		hl.addComponent(max);
@@ -93,8 +95,12 @@ public class SearchPanel extends NavigationView {
 				terms.producer = (String) producer.getValue();
 				terms.type = (WineType) type.getValue();
 
-				terms.yearmin = ParseUtil.getInt(min.getValue());
-				terms.yearmax = ParseUtil.getInt(max.getValue());
+				if (min.getValue() != null && min.getValue().length() > 1) {
+					terms.yearmin = ParseUtil.getInt(min.getValue());
+				}
+				if (max.getValue() != null && max.getValue().length() > 1) {
+					terms.yearmax = ParseUtil.getInt(max.getValue());
+				}
 
 				presenter.search(terms);
 			}

@@ -9,8 +9,14 @@ public class SearchTerms {
 	public String region;
 	public String producer;
 
-	public int yearmin;
-	public int yearmax;
+	public int yearmin = -1;
+	public int yearmax = -1;
 
 	public WineType type;
+
+	public boolean isChanged() {
+		return text != null || country != null || region != null
+				|| producer != null || type != null || yearmin != -1
+				|| yearmax != -1;
+	}
 }

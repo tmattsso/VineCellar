@@ -25,8 +25,9 @@ public class IphoneView extends NavigationManager implements WineView {
 	}
 
 	@Override
-	public void load(List<Wine> wines) {
-		final BrowseWinePanel comp = new BrowseWinePanel(wines, presenter);
+	public void load(List<Wine> wines, boolean searchResults) {
+		final BrowseWinePanel comp = new BrowseWinePanel(wines, searchResults,
+				presenter);
 		navigateTo(comp);
 	}
 

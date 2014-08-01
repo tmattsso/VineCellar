@@ -17,7 +17,7 @@ public class Backend {
 			final Connection connection = DBTools.getConnection();
 
 			final PreparedStatement prepareStatement = connection
-					.prepareStatement("SELECT * FROM wines");
+					.prepareStatement("SELECT * FROM wines ORDER BY name ASC");
 			final ResultSet executeQuery = prepareStatement.executeQuery();
 
 			return populate(executeQuery);
@@ -155,7 +155,82 @@ public class Backend {
 	}
 
 	public static List<Wine> getWines(SearchTerms terms) {
-		// TODO Auto-generated method stub
-		return getWines();
+
+		try {
+			final Connection connection = DBTools.getConnection();
+
+			String sql = "SELECT * FROM wines ";
+
+			if (terms.isChanged()) {
+				sql += "WHERE ";
+			}
+			if (terms.text != null && terms.text.length() > 0) {
+				sql += "(lower(name) LIKE ? " + "OR lower(area) LIKE ? "
+						+ "OR lower(country) LIKE ? "
+						+ "OR lower(comment) LIKE ? "
+						+ "OR lower(producer) LIKE ?) " + "AND ";
+			}
+			if (terms.region != null) {
+				sql += "area=? AND ";
+			}
+			if (terms.country != null) {
+				sql += "country=? AND ";
+			}
+			if (terms.producer != null) {
+				sql += "producer=? AND ";
+			}
+			if (terms.type != null) {
+				sql += "type=? AND ";
+			}
+			if (terms.yearmin != -1) {
+				sql += "year>=? AND ";
+			}
+			if (terms.yearmax != -1) {
+				sql += "year<=? AND ";
+			}
+
+			// trim last 'and' and sort
+			if (terms.isChanged()) {
+				sql = sql.substring(0, sql.length() - 4) + " ORDER BY name ASC";
+			}
+
+			final PreparedStatement prepareStatement = connection
+					.prepareStatement(sql);
+
+			int param = 1;
+			if (terms.text != null && terms.text.length() > 0) {
+				prepareStatement.setString(param++, "%" + terms.text + "%");
+				prepareStatement.setString(param++, "%" + terms.text + "%");
+				prepareStatement.setString(param++, "%" + terms.text + "%");
+				prepareStatement.setString(param++, "%" + terms.text + "%");
+				prepareStatement.setString(param++, "%" + terms.text + "%");
+			}
+			if (terms.region != null) {
+				prepareStatement.setString(param++, terms.region);
+			}
+			if (terms.country != null) {
+				prepareStatement.setString(param++, terms.country);
+			}
+			if (terms.producer != null) {
+				prepareStatement.setString(param++, terms.producer);
+			}
+			if (terms.type != null) {
+				prepareStatement.setInt(param++, terms.type.ordinal());
+			}
+			if (terms.yearmin != -1) {
+				prepareStatement.setInt(param++, terms.yearmin);
+			}
+			if (terms.yearmax != -1) {
+				prepareStatement.setInt(param++, terms.yearmax);
+			}
+
+			final ResultSet executeQuery = prepareStatement.executeQuery();
+			return populate(executeQuery);
+
+		} catch (final SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

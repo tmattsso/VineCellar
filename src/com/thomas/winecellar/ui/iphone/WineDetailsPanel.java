@@ -95,6 +95,7 @@ public class WineDetailsPanel extends NavigationView {
 		root.addComponent(producer);
 
 		final NumberField year = new NumberField("Year");
+		// year.setSelectionRange(1900, 2030);
 		year.setMaxLength(4);
 		year.setRequired(true);
 		form.bind(year, "year");
@@ -104,12 +105,14 @@ public class WineDetailsPanel extends NavigationView {
 			@Override
 			public String convertToPresentation(Integer value,
 					Class<? extends String> targetType, Locale locale)
-					throws com.vaadin.data.util.converter.Converter.ConversionException {
+							throws com.vaadin.data.util.converter.Converter.ConversionException {
 				return value + "";
 			}
 		});
 		year.setWidth("100%");
-		year.setValue("2010");
+		if (editMode && wine.getYear() < 1900) {
+			year.setValue("2010");
+		}
 		root.addComponent(year);
 
 		final ComboBox region = new ComboBox("Region");

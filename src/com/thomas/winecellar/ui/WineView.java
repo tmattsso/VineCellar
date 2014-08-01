@@ -6,7 +6,7 @@ import com.thomas.winecellar.data.Wine;
 
 public interface WineView {
 
-	public void load(List<Wine> wines);
+	public void load(List<Wine> wines, boolean searchResults);
 
 	public void showDetails(Wine w);
 

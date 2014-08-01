@@ -9,6 +9,7 @@ import com.vaadin.addon.touchkit.ui.NavigationButton.NavigationButtonClickEvent;
 import com.vaadin.addon.touchkit.ui.NavigationButton.NavigationButtonClickListener;
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.BaseTheme;
 
@@ -18,10 +19,13 @@ public class BrowseWinePanel extends NavigationView {
 	private final List<Wine> wines;
 	private final VerticalLayout main;
 	private final WinePresenter presenter;
+	private final boolean searchResults;
 
-	public BrowseWinePanel(List<Wine> wines, final WinePresenter presenter) {
+	public BrowseWinePanel(List<Wine> wines, boolean searchResults,
+			final WinePresenter presenter) {
 
 		this.wines = wines;
+		this.searchResults = searchResults;
 		this.presenter = presenter;
 		main = new VerticalLayout();
 		setContent(main);
@@ -38,7 +42,8 @@ public class BrowseWinePanel extends NavigationView {
 		main.addComponent(group);
 
 		for (final Wine w : wines) {
-			final NavigationButton c = new NavigationButton(w.getName());
+			final NavigationButton c = new NavigationButton(w.getName() + " ("
+					+ w.getYear() + ")");
 			c.addStyleName(BaseTheme.BUTTON_LINK);
 			group.addComponent(c);
 			c.addClickListener(new NavigationButtonClickListener() {
@@ -53,7 +58,14 @@ public class BrowseWinePanel extends NavigationView {
 			});
 		}
 
-		setToolbar(new WineToolbar(presenter));
+		if (wines.isEmpty()) {
+			final Label l = new Label("No wines found!");
+			group.addComponent(l);
+		}
+
+		if (!searchResults) {
+			setToolbar(new WineToolbar(presenter));
+		}
 	}
 
 	@Override
