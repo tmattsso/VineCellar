@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.thomas.winecellar.data.Wine;
 import com.vaadin.addon.touchkit.ui.NavigationManager;
+import com.vaadin.ui.Notification;
 
 public class IphoneView extends NavigationManager implements WineView {
 
@@ -12,24 +13,29 @@ public class IphoneView extends NavigationManager implements WineView {
 	private WinePresenter presenter;
 	{
 		presenter = new WinePresenter();
+		setSizeFull();
+	}
+
+	@Override
+	public void attach() {
+		super.attach();
 		presenter.init(this);
 	}
 
 	@Override
 	public void load(List<Wine> wines) {
-		navigateTo(new BrowseWinePanel(wines));
+		final BrowseWinePanel comp = new BrowseWinePanel(wines, presenter);
+		navigateTo(comp);
 	}
 
 	@Override
 	public void showDetails(Wine w) {
-		// TODO Auto-generated method stub
-
+		navigateTo(new WineDetailsPanel(w));
 	}
 
 	@Override
 	public void showError(Exception e) {
-		// TODO Auto-generated method stub
-
+		Notification.show(e.getMessage());
 	}
 
 }
