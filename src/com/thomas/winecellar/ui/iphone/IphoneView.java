@@ -1,8 +1,10 @@
-package com.thomas.winecellar;
+package com.thomas.winecellar.ui.iphone;
 
 import java.util.List;
 
 import com.thomas.winecellar.data.Wine;
+import com.thomas.winecellar.ui.WinePresenter;
+import com.thomas.winecellar.ui.WineView;
 import com.vaadin.addon.touchkit.ui.NavigationManager;
 import com.vaadin.ui.Notification;
 

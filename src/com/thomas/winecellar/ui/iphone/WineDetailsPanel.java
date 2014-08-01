@@ -1,4 +1,4 @@
-package com.thomas.winecellar;
+package com.thomas.winecellar.ui.iphone;
 
 import com.thomas.winecellar.data.Wine;
 import com.vaadin.addon.touchkit.ui.NavigationView;

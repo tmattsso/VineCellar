@@ -1,4 +1,4 @@
-package com.thomas.winecellar;
+package com.thomas.winecellar.ui;
 
 import java.sql.SQLException;
 import java.util.List;
