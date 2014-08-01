@@ -31,23 +31,23 @@ public class WinePresenter {
 		w.setComment(comment);
 
 		try {
-			save(w);
+			saveInBackend(w);
 			view.showDetails(w);
 		} catch (final SQLException e) {
 			handleError(e);
 		}
 	}
 
-	public void add(Wine w) {
+	public void save(Wine w) {
 		try {
-			w = save(w);
+			w = saveInBackend(w);
 			view.showDetails(w);
 		} catch (final SQLException e) {
 			handleError(e);
 		}
 	}
 
-	private Wine save(Wine w) throws SQLException {
+	private Wine saveInBackend(Wine w) throws SQLException {
 		return Backend.save(w);
 	}
 
@@ -63,5 +63,9 @@ public class WinePresenter {
 	public void handleError(Exception e) {
 		e.printStackTrace();
 		view.showError(e);
+	}
+
+	public Object getRegions() {
+		return Backend.getRegionList();
 	}
 }

@@ -146,4 +146,8 @@ public class Backend {
 	public static List<String> getProducerList() {
 		return getStringList("producer");
 	}
+
+	public static List<String> getRegionList() {
+		return getStringList("area");
+	}
 }

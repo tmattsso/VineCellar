@@ -3,7 +3,7 @@ package com.thomas.winecellar.data;
 public class Wine {
 
 	public enum WineType {
-		WHITE, RED, ROSE, BUBBLY
+		WHITE, RED, ROSE, CHAMPAGNE, MOUSSE, SWEET
 	}
 
 	private int id = -1;

@@ -3,11 +3,13 @@ package com.thomas.winecellar.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 import com.thomas.winecellar.data.DBTools;
+import com.thomas.winecellar.data.Wine.WineType;
 
 public class CSVImporter {
 
@@ -24,13 +26,9 @@ public class CSVImporter {
 
 		final Connection connection = DBTools.getConnection();
 
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(
-				new FileInputStream(f), "ISO-8859-1"));
+		final String fileContent = readFile("/Users/Thomas/wines.csv");
 
-		String line = null;
-
-		// skip header
-		reader.readLine();
+		final String[] lines = fileContent.split("\r\n");
 
 		try {
 
@@ -42,7 +40,13 @@ public class CSVImporter {
 
 			int rowNum = 1;
 
-			while ((line = reader.readLine()) != null) {
+			for (final String line : lines) {
+
+				// skip header
+				if (rowNum == 1) {
+					rowNum++;
+					continue;
+				}
 
 				rowNum++;
 
@@ -99,9 +103,29 @@ public class CSVImporter {
 		} catch (final Exception e) {
 			e.printStackTrace();
 		} finally {
-			reader.close();
 			connection.close();
 		}
+	}
+
+	private static String readFile(String filename) {
+		String content = null;
+		final File file = new File(filename); // for ex foo.txt
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(
+					new FileInputStream(filename), "ISO-8859-1"));
+			final char[] chars = new char[(int) file.length()];
+			reader.read(chars);
+			content = new String(chars);
+		} catch (final IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				reader.close();
+			} catch (final Exception IGNORE) {
+			}
+		}
+		return content;
 	}
 
 	private static int getInt(String num) {
@@ -123,6 +147,24 @@ public class CSVImporter {
 	}
 
 	private static int parseType(String type) {
-		return 0;
+		if (type.toLowerCase().contains("rött")) {
+			return WineType.RED.ordinal();
+		}
+		if (type.toLowerCase().contains("champ")) {
+			return WineType.CHAMPAGNE.ordinal();
+		}
+		if (type.toLowerCase().contains("mouss")) {
+			return WineType.MOUSSE.ordinal();
+		}
+		if (type.toLowerCase().contains("vitt")) {
+			return WineType.WHITE.ordinal();
+		}
+		if (type.toLowerCase().contains("ros")) {
+			return WineType.ROSE.ordinal();
+		}
+		if (type.toLowerCase().contains("sött")) {
+			return WineType.SWEET.ordinal();
+		}
+		throw new RuntimeException("No such wine type: " + type);
 	}
 }

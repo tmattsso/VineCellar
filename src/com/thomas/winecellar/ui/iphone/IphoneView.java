@@ -32,10 +32,10 @@ public class IphoneView extends NavigationManager implements WineView {
 
 	@Override
 	public void showDetails(Wine w) {
-		if (getCurrentComponent() instanceof EditWinePanel) {
+		if (getCurrentComponent() instanceof WineDetailsPanel) {
 			navigateBack();
 		}
-		navigateTo(new WineDetailsPanel(w));
+		navigateTo(new WineDetailsPanel(w, presenter, false));
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class IphoneView extends NavigationManager implements WineView {
 
 	@Override
 	public void showEdit(Wine wine) {
-		navigateTo(new EditWinePanel(wine, presenter));
+		navigateTo(new WineDetailsPanel(wine, presenter, true));
 	}
 
 }

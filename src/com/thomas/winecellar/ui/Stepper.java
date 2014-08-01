@@ -16,6 +16,10 @@ public class Stepper extends CustomField<Integer> {
 
 	private final Label currentValue = new Label();
 
+	private Button minus;
+
+	private Button plus;
+
 	public Stepper(int initial) {
 		setValue(initial);
 		setSizeUndefined();
@@ -30,16 +34,19 @@ public class Stepper extends CustomField<Integer> {
 
 	@Override
 	protected Component initContent() {
-		final Button minus = new Button(FontAwesome.MINUS);
-		final Button plus = new Button(FontAwesome.PLUS);
+		minus = new Button(FontAwesome.MINUS);
+		minus.setWidth("35px");
+		plus = new Button(FontAwesome.PLUS);
+		plus.setWidth("35px");
 
 		currentValue.setValue(getValue() + "");
-		currentValue.setWidth("100px");
+		currentValue.setWidth("100%");
 
 		final HorizontalLayout root = new HorizontalLayout(minus, currentValue,
 				plus);
 		root.setSpacing(true);
 		root.setComponentAlignment(currentValue, Alignment.MIDDLE_CENTER);
+		root.setExpandRatio(currentValue, 1);
 
 		minus.addClickListener(new ClickListener() {
 
@@ -63,6 +70,18 @@ public class Stepper extends CustomField<Integer> {
 		});
 
 		return root;
+	}
+
+	@Override
+	public void setReadOnly(boolean readOnly) {
+		super.setReadOnly(readOnly);
+
+		// force init
+		getContent();
+
+		plus.setVisible(!readOnly);
+		minus.setVisible(!readOnly);
+
 	}
 
 	@Override
