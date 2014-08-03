@@ -43,8 +43,10 @@ public class VinecellarUI extends UI {
 	protected void init(VaadinRequest request) {
 
 		final String agent = getPage().getWebBrowser().getBrowserApplication();
+		System.out.println(agent);
 
-		if (agent.toLowerCase().contains("iphone")) {
+		if (agent.toLowerCase().contains("iphone")
+				|| agent.contains("GT-I9300")) {
 			setContent(new IphoneView());
 		} else {
 			setContent(new ComputerView());
