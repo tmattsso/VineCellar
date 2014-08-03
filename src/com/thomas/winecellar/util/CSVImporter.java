@@ -1,15 +1,10 @@
 package com.thomas.winecellar.util;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 import com.thomas.winecellar.data.DBTools;
-import com.thomas.winecellar.data.Wine.WineType;
 
 public class CSVImporter {
 
@@ -26,7 +21,8 @@ public class CSVImporter {
 
 		final Connection connection = DBTools.getConnection();
 
-		final String fileContent = readFile("/Users/Thomas/wines.csv");
+		final String fileContent = ParseUtil
+				.readFile("/Users/Thomas/wines.csv");
 
 		final String[] lines = fileContent.split("\r\n");
 
@@ -52,22 +48,22 @@ public class CSVImporter {
 
 				final String[] row = line.split(";");
 				int i = 0;
-				final String type = get(row, i++);
-				String name = get(row, i++);
-				final String year = get(row, i++);
-				final String area = get(row, i++);
-				final String country = get(row, i++);
-				final String producer = get(row, i++);
-				final String num = get(row, i++);
-				final String from = get(row, i++);
-				final String senast = get(row, i++);
-				final String best = get(row, i++);
-				final String WA = get(row, i++);
-				final String WS = get(row, i++);
-				final String LG = get(row, i++);
-				final String other = get(row, i++);
-				final String druvor = get(row, i++);
-				final String comment = get(row, i++);
+				final String type = ParseUtil.get(row, i++);
+				String name = ParseUtil.get(row, i++);
+				final String year = ParseUtil.get(row, i++);
+				final String area = ParseUtil.get(row, i++);
+				final String country = ParseUtil.get(row, i++);
+				final String producer = ParseUtil.get(row, i++);
+				final String num = ParseUtil.get(row, i++);
+				final String from = ParseUtil.get(row, i++);
+				final String senast = ParseUtil.get(row, i++);
+				final String best = ParseUtil.get(row, i++);
+				final String WA = ParseUtil.get(row, i++);
+				final String WS = ParseUtil.get(row, i++);
+				final String LG = ParseUtil.get(row, i++);
+				final String other = ParseUtil.get(row, i++);
+				final String druvor = ParseUtil.get(row, i++);
+				final String comment = ParseUtil.get(row, i++);
 
 				if (name == null) {
 
@@ -88,7 +84,7 @@ public class CSVImporter {
 				insert.setString(col++, name);
 				insert.setString(col++, comment);
 				insert.setString(col++, producer);
-				insert.setInt(col++, parseType(type));
+				insert.setInt(col++, ParseUtil.parseType(type));
 				insert.setInt(col++, ParseUtil.getInt(num));
 				insert.setString(col++, country);
 				insert.setInt(col++, ParseUtil.getInt(year));
@@ -111,53 +107,4 @@ public class CSVImporter {
 		}
 	}
 
-	private static String readFile(String filename) {
-		String content = null;
-		final File file = new File(filename); // for ex foo.txt
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new InputStreamReader(
-					new FileInputStream(filename), "ISO-8859-1"));
-			final char[] chars = new char[(int) file.length()];
-			reader.read(chars);
-			content = new String(chars);
-		} catch (final IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				reader.close();
-			} catch (final Exception IGNORE) {
-			}
-		}
-		return content;
-	}
-
-	private static String get(String[] row, int i) {
-		if (row.length <= i) {
-			return null;
-		}
-		return row[i];
-	}
-
-	private static int parseType(String type) {
-		if (type.toLowerCase().contains("rött")) {
-			return WineType.RED.ordinal();
-		}
-		if (type.toLowerCase().contains("champ")) {
-			return WineType.CHAMPAGNE.ordinal();
-		}
-		if (type.toLowerCase().contains("mouss")) {
-			return WineType.SPARKLING.ordinal();
-		}
-		if (type.toLowerCase().contains("vitt")) {
-			return WineType.WHITE.ordinal();
-		}
-		if (type.toLowerCase().contains("ros")) {
-			return WineType.ROSE.ordinal();
-		}
-		if (type.toLowerCase().contains("sött")) {
-			return WineType.SWEET.ordinal();
-		}
-		throw new RuntimeException("No such wine type: " + type);
-	}
 }
