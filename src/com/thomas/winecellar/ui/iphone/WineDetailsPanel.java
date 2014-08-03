@@ -31,7 +31,6 @@ public class WineDetailsPanel extends NavigationView {
 	private static final long serialVersionUID = 9055453044578390581L;
 	private FieldGroup form;
 	private final Wine wine;
-	private final WinePresenter presenter;
 	private Button editButton;
 	private boolean editMode;
 
@@ -39,7 +38,6 @@ public class WineDetailsPanel extends NavigationView {
 			boolean edit) {
 
 		wine = w;
-		this.presenter = presenter;
 		editMode = edit;
 		setCaption("Edit wine");
 

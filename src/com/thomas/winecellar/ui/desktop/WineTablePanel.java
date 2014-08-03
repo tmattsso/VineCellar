@@ -57,6 +57,8 @@ public class WineTablePanel extends NavigationView {
 				Wine.class, wines);
 
 		final Table t = new Table(null, container) {
+			private static final long serialVersionUID = 5646119148734072213L;
+
 			@Override
 			protected String formatPropertyValue(Object rowId, Object colId,
 					Property<?> property) {
