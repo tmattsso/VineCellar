@@ -12,7 +12,7 @@ public class IphoneView extends NavigationManager implements WineView {
 
 	private static final long serialVersionUID = 8222285875396851695L;
 
-	private WinePresenter presenter;
+	protected WinePresenter presenter;
 	{
 		presenter = new WinePresenter();
 		setSizeFull();
