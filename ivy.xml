@@ -32,6 +32,8 @@
 		<dependency org="com.vaadin.addon" name="vaadin-touchkit-agpl" rev="4.0.0.beta2" />
 		
 		<dependency org="postgresql" name="postgresql" rev="9.1-901.jdbc4"/>
+		<dependency org="net.sf.ehcache" name="ehcache-web" rev="2.0.4"/>
+		<dependency org="net.sf.ehcache" name="ehcache-core" rev="2.6.9"/>
 		
 
 		<!-- Precompiled DefaultWidgetSet -->

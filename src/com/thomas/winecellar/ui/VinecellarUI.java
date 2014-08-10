@@ -17,7 +17,7 @@ import com.vaadin.ui.UI;
 @Widgetset("com.vaadin.addon.touchkit.gwt.TouchKitWidgetSet")
 public class VinecellarUI extends UI {
 
-	@WebServlet(value = "/*", asyncSupported = true)
+	@WebServlet(value = "/*")
 	@VaadinServletConfiguration(productionMode = false, ui = VinecellarUI.class)
 	public static class Servlet extends TouchKitServlet {
 
@@ -27,14 +27,16 @@ public class VinecellarUI extends UI {
 
 			final TouchKitSettings s = getTouchKitSettings();
 
+			s.getWebAppSettings().setWebAppCapable(true);
+			s.getWebAppSettings().setStatusBarStyle("black");
+
 			final String contextPath = getServletConfig().getServletContext()
 					.getContextPath();
-			s.getApplicationIcons().addApplicationIcon(
-					contextPath + "/VAADIN/themes/winecellar/exec_wine.png");
+			final String path = contextPath
+					+ "/VAADIN/themes/winecellar/icons/exec_wine.png";
+			s.getApplicationIcons().addApplicationIcon(path);
 
 			s.getApplicationCacheSettings().setCacheManifestEnabled(true);
-
-			s.getWebAppSettings().setWebAppCapable(true);
 
 		}
 	}
@@ -44,6 +46,8 @@ public class VinecellarUI extends UI {
 
 		final String agent = getPage().getWebBrowser().getBrowserApplication();
 		System.out.println(agent);
+
+		getPage().setTitle("WineCellar");
 
 		if (agent.toLowerCase().contains("iphone")
 				|| agent.contains("GT-I9300")) {
