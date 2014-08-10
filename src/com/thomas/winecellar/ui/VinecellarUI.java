@@ -3,6 +3,7 @@ package com.thomas.winecellar.ui;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 
+import com.thomas.winecellar.ui.desktop.ComputerView;
 import com.thomas.winecellar.ui.iphone.IphoneView;
 import com.vaadin.addon.touchkit.server.TouchKitServlet;
 import com.vaadin.addon.touchkit.settings.TouchKitSettings;

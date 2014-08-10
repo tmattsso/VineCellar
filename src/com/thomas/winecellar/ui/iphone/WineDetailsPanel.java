@@ -4,8 +4,8 @@ import java.util.Locale;
 
 import com.thomas.winecellar.data.Wine;
 import com.thomas.winecellar.data.Wine.WineType;
-import com.thomas.winecellar.ui.Stepper;
 import com.thomas.winecellar.ui.WinePresenter;
+import com.thomas.winecellar.ui.components.Stepper;
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.addon.touchkit.ui.NumberField;
 import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;

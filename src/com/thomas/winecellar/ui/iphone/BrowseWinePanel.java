@@ -16,26 +16,26 @@ import com.vaadin.ui.themes.BaseTheme;
 public class BrowseWinePanel extends NavigationView {
 
 	private static final long serialVersionUID = 3298846700229147335L;
-	private final List<Wine> wines;
 	private final VerticalLayout main;
 	private final WinePresenter presenter;
-	private final boolean searchResults;
 
 	public BrowseWinePanel(List<Wine> wines, boolean searchResults,
 			final WinePresenter presenter) {
 
-		this.wines = wines;
-		this.searchResults = searchResults;
 		this.presenter = presenter;
 		main = new VerticalLayout();
 		setContent(main);
 
+		updateTable(wines, searchResults);
 	}
 
 	@Override
 	public void attach() {
 		super.attach();
 
+	}
+
+	public void updateTable(List<Wine> wines, boolean searchResults) {
 		main.removeAllComponents();
 
 		final VerticalComponentGroup group = new VerticalComponentGroup();

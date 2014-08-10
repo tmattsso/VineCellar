@@ -19,24 +19,18 @@ public class WineTablePanel extends NavigationView {
 	private static final long serialVersionUID = -1355514154334927278L;
 
 	private final WinePresenter presenter;
-	private final List<Wine> wines;
-
-	private final boolean searchResults;
 
 	public WineTablePanel(WinePresenter presenter, List<Wine> wines,
 			boolean searchResults) {
 		this.presenter = presenter;
-		this.wines = wines;
-		this.searchResults = searchResults;
 		setSizeFull();
 
 		setCaption("Winecellar app");
+
+		updateTable(wines, searchResults);
 	}
 
-	@Override
-	protected void onBecomingVisible() {
-		super.onBecomingVisible();
-
+	public void updateTable(List<Wine> wines, boolean searchResults) {
 		final VerticalLayout root = new VerticalLayout();
 		setContent(root);
 		root.setMargin(true);
