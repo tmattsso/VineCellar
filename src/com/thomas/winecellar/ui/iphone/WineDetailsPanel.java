@@ -103,7 +103,7 @@ public class WineDetailsPanel extends NavigationView {
 			@Override
 			public String convertToPresentation(Integer value,
 					Class<? extends String> targetType, Locale locale)
-							throws com.vaadin.data.util.converter.Converter.ConversionException {
+					throws com.vaadin.data.util.converter.Converter.ConversionException {
 				return value + "";
 			}
 		});
@@ -160,6 +160,11 @@ public class WineDetailsPanel extends NavigationView {
 		form.bind(type, "type");
 		type.setWidth("100%");
 		root.addComponent(type);
+
+		field = form.buildAndBind("grapes");
+		field.setCaption("Grapes");
+		field.setWidth("100%");
+		root.addComponent(field);
 
 		final Stepper amount = new Stepper(0);
 		amount.setCaption("Amount");

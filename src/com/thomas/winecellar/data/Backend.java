@@ -62,18 +62,25 @@ public class Backend {
 
 			final PreparedStatement prepareStatement = connection
 					.prepareStatement("UPDATE wines SET "
-							+ "name=?, comment=?, producer=?, type=?, amount=?, country=?, year=?"
-							+ " WHERE id=?");
+							+ "name=?, comment=?, producer=?, type=?, amount=?, "
+							+ "country=?, year=?, area=?, drinkfrom=?, drinklast=?, "
+							+ "drinkbest=?, grapes=?" + " WHERE id=?");
 
-			prepareStatement.setString(1, w.getName());
-			prepareStatement.setString(2, w.getComment());
-			prepareStatement.setString(3, w.getProducer());
-			prepareStatement.setInt(4, w.getType().ordinal());
-			prepareStatement.setInt(5, w.getAmount());
-			prepareStatement.setString(6, w.getCountry());
-			prepareStatement.setInt(7, w.getYear());
+			int col = 1;
+			prepareStatement.setString(col++, w.getName());
+			prepareStatement.setString(col++, w.getComment());
+			prepareStatement.setString(col++, w.getProducer());
+			prepareStatement.setInt(col++, w.getType().ordinal());
+			prepareStatement.setInt(col++, w.getAmount());
+			prepareStatement.setString(col++, w.getCountry());
+			prepareStatement.setInt(col++, w.getYear());
+			prepareStatement.setString(col++, w.getRegion());
+			prepareStatement.setString(col++, w.getDrinkFrom());
+			prepareStatement.setString(col++, w.getDrinkUntil());
+			prepareStatement.setString(col++, w.getDrinkBest());
+			prepareStatement.setString(col++, w.getGrapes());
 
-			prepareStatement.setInt(8, w.getId());
+			prepareStatement.setInt(col++, w.getId());
 
 			prepareStatement.executeUpdate();
 
