@@ -18,6 +18,8 @@ public class ComputerView extends IphoneView {
 			wineTablePanel = new WineTablePanel(presenter, wines, searchResults);
 			navigateTo(wineTablePanel);
 		}
+
+		wineTablePanel.scrollTo(selectedWine);
 	}
 
 	@Override

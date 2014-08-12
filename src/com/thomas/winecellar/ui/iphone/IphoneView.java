@@ -6,7 +6,6 @@ import com.thomas.winecellar.data.Wine;
 import com.thomas.winecellar.ui.FragmentNavigator;
 import com.thomas.winecellar.ui.WinePresenter;
 import com.thomas.winecellar.ui.WineView;
-import com.thomas.winecellar.ui.desktop.WineTablePanel;
 import com.vaadin.addon.touchkit.ui.NavigationManager.NavigationEvent.Direction;
 import com.vaadin.ui.Notification;
 
@@ -17,6 +16,8 @@ public class IphoneView extends FragmentNavigator implements WineView {
 	protected WinePresenter presenter;
 
 	private BrowseWinePanel comp;
+
+	protected Wine selectedWine;
 
 	public IphoneView() {
 		presenter = new WinePresenter();
@@ -46,7 +47,7 @@ public class IphoneView extends FragmentNavigator implements WineView {
 	}
 
 	protected boolean currentInListView() {
-		return getCurrentComponent() instanceof WineTablePanel;
+		return getCurrentComponent() instanceof BrowseWinePanel;
 	}
 
 	@Override
@@ -58,10 +59,13 @@ public class IphoneView extends FragmentNavigator implements WineView {
 			comp = new BrowseWinePanel(wines, searchResults, presenter);
 			navigateTo(comp);
 		}
+
+		comp.scrollTo(selectedWine);
 	}
 
 	@Override
 	public void showDetails(Wine w) {
+		selectedWine = w;
 		if (getCurrentComponent() instanceof WineDetailsPanel) {
 			navigateBack();
 		}
@@ -75,6 +79,7 @@ public class IphoneView extends FragmentNavigator implements WineView {
 
 	@Override
 	public void showEdit(Wine wine) {
+		selectedWine = wine;
 		navigateTo(new WineDetailsPanel(wine, presenter, true));
 	}
 

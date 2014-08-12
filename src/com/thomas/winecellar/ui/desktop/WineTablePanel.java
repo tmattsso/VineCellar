@@ -20,6 +20,8 @@ public class WineTablePanel extends NavigationView {
 
 	private final WinePresenter presenter;
 
+	private Table wineTable;
+
 	public WineTablePanel(WinePresenter presenter, List<Wine> wines,
 			boolean searchResults) {
 		this.presenter = presenter;
@@ -50,7 +52,7 @@ public class WineTablePanel extends NavigationView {
 		final BeanItemContainer<Wine> container = new BeanItemContainer<Wine>(
 				Wine.class, wines);
 
-		final Table t = new Table(null, container) {
+		wineTable = new Table(null, container) {
 			private static final long serialVersionUID = 5646119148734072213L;
 
 			@Override
@@ -62,24 +64,28 @@ public class WineTablePanel extends NavigationView {
 				return super.formatPropertyValue(rowId, colId, property);
 			}
 		};
-		t.setSizeFull();
+		wineTable.setSizeFull();
 
-		t.setVisibleColumns("type", "name", "year", "region", "country",
-				"producer", "amount", "drinkFrom", "drinkUntil", "drinkBest",
-				"grapes", "comment");
-		t.setColumnWidth("comment", 200);
+		wineTable.setVisibleColumns("type", "name", "year", "region",
+				"country", "producer", "amount", "drinkFrom", "drinkUntil",
+				"drinkBest", "grapes", "comment");
+		wineTable.setColumnWidth("comment", 200);
 
-		root.addComponent(t);
+		root.addComponent(wineTable);
 
-		t.setSelectable(true);
-		t.addValueChangeListener(new ValueChangeListener() {
+		wineTable.setSelectable(true);
+		wineTable.addValueChangeListener(new ValueChangeListener() {
 
 			private static final long serialVersionUID = 5561240763809053670L;
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				presenter.wineSelected((Wine) t.getValue());
+				presenter.wineSelected((Wine) wineTable.getValue());
 			}
 		});
+	}
+
+	public void scrollTo(Wine selectedWine) {
+		wineTable.setCurrentPageFirstItemId(selectedWine);
 	}
 }
