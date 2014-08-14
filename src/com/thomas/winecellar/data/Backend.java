@@ -7,11 +7,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.thomas.winecellar.data.Wine.WineType;
 
 public class Backend {
 
-	public static List<Wine> getWines() {
+	private static Logger log = LogManager.getLogger("Backend");
+
+	public static List<Wine> getWines() throws BackendException {
 
 		try {
 			final Connection connection = DBTools.getConnection();
@@ -23,10 +28,10 @@ public class Backend {
 			return populate(executeQuery);
 
 		} catch (final SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
-		return null;
+
+		throw new BackendException();
 	}
 
 	private static List<Wine> populate(ResultSet result) throws SQLException {
@@ -54,80 +59,87 @@ public class Backend {
 		return wines;
 	}
 
-	public static Wine save(Wine w) throws SQLException {
+	public static Wine save(Wine w) throws BackendException {
 
-		if (w.getId() != -1) {
-			// already inserted, update
-			final Connection connection = DBTools.getConnection();
+		try {
+			if (w.getId() != -1) {
+				// already inserted, update
+				final Connection connection = DBTools.getConnection();
 
-			final PreparedStatement prepareStatement = connection
-					.prepareStatement("UPDATE wines SET "
-							+ "name=?, comment=?, producer=?, type=?, amount=?, "
-							+ "country=?, year=?, area=?, drinkfrom=?, drinklast=?, "
-							+ "drinkbest=?, grapes=?" + " WHERE id=?");
+				final PreparedStatement prepareStatement = connection
+						.prepareStatement("UPDATE wines SET "
+								+ "name=?, comment=?, producer=?, type=?, amount=?, "
+								+ "country=?, year=?, area=?, drinkfrom=?, drinklast=?, "
+								+ "drinkbest=?, grapes=?" + " WHERE id=?");
 
-			int col = 1;
-			prepareStatement.setString(col++, w.getName());
-			prepareStatement.setString(col++, w.getComment());
-			prepareStatement.setString(col++, w.getProducer());
-			prepareStatement.setInt(col++, w.getType().ordinal());
-			prepareStatement.setInt(col++, w.getAmount());
-			prepareStatement.setString(col++, w.getCountry());
-			prepareStatement.setInt(col++, w.getYear());
-			prepareStatement.setString(col++, w.getRegion());
-			prepareStatement.setString(col++, w.getDrinkFrom());
-			prepareStatement.setString(col++, w.getDrinkUntil());
-			prepareStatement.setString(col++, w.getDrinkBest());
-			prepareStatement.setString(col++, w.getGrapes());
+				int col = 1;
+				prepareStatement.setString(col++, w.getName());
+				prepareStatement.setString(col++, w.getComment());
+				prepareStatement.setString(col++, w.getProducer());
+				prepareStatement.setInt(col++, w.getType().ordinal());
+				prepareStatement.setInt(col++, w.getAmount());
+				prepareStatement.setString(col++, w.getCountry());
+				prepareStatement.setInt(col++, w.getYear());
+				prepareStatement.setString(col++, w.getRegion());
+				prepareStatement.setString(col++, w.getDrinkFrom());
+				prepareStatement.setString(col++, w.getDrinkUntil());
+				prepareStatement.setString(col++, w.getDrinkBest());
+				prepareStatement.setString(col++, w.getGrapes());
 
-			prepareStatement.setInt(col++, w.getId());
+				prepareStatement.setInt(col++, w.getId());
 
-			prepareStatement.executeUpdate();
+				prepareStatement.executeUpdate();
 
-		} else {
-			// insert
-			final Connection connection = DBTools.getConnection();
+			} else {
+				// insert
+				final Connection connection = DBTools.getConnection();
 
-			final PreparedStatement insert = connection
-					.prepareStatement(
-							"INSERT INTO wines VALUES(?,?,?,?,?,?,?,DEFAULT,?,?,?,?,?)",
-							java.sql.Statement.RETURN_GENERATED_KEYS);
+				final PreparedStatement insert = connection
+						.prepareStatement(
+								"INSERT INTO wines VALUES(?,?,?,?,?,?,?,DEFAULT,?,?,?,?,?)",
+								java.sql.Statement.RETURN_GENERATED_KEYS);
 
-			int col = 1;
+				int col = 1;
 
-			insert.setString(col++, w.getName());
-			insert.setString(col++, w.getComment());
-			insert.setString(col++, w.getProducer());
-			insert.setInt(col++, w.getType().ordinal());
-			insert.setInt(col++, w.getAmount());
-			insert.setString(col++, w.getCountry());
-			insert.setInt(col++, w.getYear());
+				insert.setString(col++, w.getName());
+				insert.setString(col++, w.getComment());
+				insert.setString(col++, w.getProducer());
+				insert.setInt(col++, w.getType().ordinal());
+				insert.setInt(col++, w.getAmount());
+				insert.setString(col++, w.getCountry());
+				insert.setInt(col++, w.getYear());
 
-			insert.setString(col++, null);
-			insert.setString(col++, null);
-			insert.setString(col++, null);
-			insert.setString(col++, null);
-			insert.setString(col++, null);
+				insert.setString(col++, null);
+				insert.setString(col++, null);
+				insert.setString(col++, null);
+				insert.setString(col++, null);
+				insert.setString(col++, null);
 
-			final int result = insert.executeUpdate();
+				final int result = insert.executeUpdate();
 
-			if (result != 1) {
-				throw new SQLException("no primary key generated");
+				if (result != 1) {
+					throw new SQLException("no primary key generated");
+				}
+
+				final ResultSet generatedKeys = insert.getGeneratedKeys();
+				generatedKeys.next();
+				w.setId(generatedKeys.getInt(8));
 			}
+		} catch (final SQLException e) {
+			log.error(e);
 
-			final ResultSet generatedKeys = insert.getGeneratedKeys();
-			generatedKeys.next();
-			w.setId(generatedKeys.getInt(8));
+			throw new BackendException();
 		}
 
 		return w;
 	}
 
-	public static List<String> getCountryList() {
+	public static List<String> getCountryList() throws BackendException {
 		return getStringList("country");
 	}
 
-	private static List<String> getStringList(String col) {
+	private static List<String> getStringList(String col)
+			throws BackendException {
 		try {
 			final Connection connection = DBTools.getConnection();
 
@@ -147,21 +159,22 @@ public class Backend {
 			return countries;
 
 		} catch (final SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
-		return null;
+
+		throw new BackendException();
 	}
 
-	public static List<String> getProducerList() {
+	public static List<String> getProducerList() throws BackendException {
 		return getStringList("producer");
 	}
 
-	public static List<String> getRegionList() {
+	public static List<String> getRegionList() throws BackendException {
 		return getStringList("area");
 	}
 
-	public static List<Wine> getWines(SearchTerms terms) {
+	public static List<Wine> getWines(SearchTerms terms)
+			throws BackendException {
 
 		try {
 			final Connection connection = DBTools.getConnection();
@@ -235,9 +248,8 @@ public class Backend {
 			return populate(executeQuery);
 
 		} catch (final SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
-		return null;
+		throw new BackendException();
 	}
 }

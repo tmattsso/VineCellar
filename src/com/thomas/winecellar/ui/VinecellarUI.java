@@ -46,7 +46,7 @@ public class VinecellarUI extends UI {
 	protected void init(VaadinRequest request) {
 
 		final String agent = getPage().getWebBrowser().getBrowserApplication();
-		System.out.println(agent);
+		// System.out.println(agent);
 
 		getPage().setTitle("WineCellar");
 

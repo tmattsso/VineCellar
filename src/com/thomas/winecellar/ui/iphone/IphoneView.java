@@ -73,8 +73,8 @@ public class IphoneView extends FragmentNavigator implements WineView {
 	}
 
 	@Override
-	public void showError(Exception e) {
-		Notification.show(e.getMessage());
+	public void showError(String msg) {
+		Notification.show(msg);
 	}
 
 	@Override
