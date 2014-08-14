@@ -114,11 +114,11 @@ public class Backend {
 				insert.setString(col++, w.getCountry());
 				insert.setInt(col++, w.getYear());
 
-				insert.setString(col++, null);
-				insert.setString(col++, null);
-				insert.setString(col++, null);
-				insert.setString(col++, null);
-				insert.setString(col++, null);
+				insert.setString(col++, w.getRegion());
+				insert.setString(col++, w.getDrinkBest());
+				insert.setString(col++, w.getDrinkUntil());
+				insert.setString(col++, w.getDrinkBest());
+				insert.setString(col++, w.getGrapes());
 
 				final int result = insert.executeUpdate();
 
