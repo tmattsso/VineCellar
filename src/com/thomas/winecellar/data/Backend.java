@@ -18,6 +18,7 @@ public class Backend {
 
 	public static List<Wine> getWines() throws BackendException {
 
+		log.info("loading wines..");
 		try {
 			final Connection connection = DBTools.getConnection();
 
@@ -25,7 +26,11 @@ public class Backend {
 					.prepareStatement("SELECT * FROM wines ORDER BY name ASC");
 			final ResultSet executeQuery = prepareStatement.executeQuery();
 
-			return populate(executeQuery);
+			final List<Wine> populate = populate(executeQuery);
+
+			log.info("loaded " + populate.size() + " wines.");
+
+			return populate;
 
 		} catch (final SQLException e) {
 			log.error(e);
