@@ -3,23 +3,23 @@ package com.thomas.winecellar.ui.iphone;
 import java.util.List;
 
 import com.thomas.winecellar.data.Wine;
+import com.thomas.winecellar.ui.FragmentNavigator;
 import com.thomas.winecellar.ui.WinePresenter;
 import com.thomas.winecellar.ui.WineView;
-import com.vaadin.addon.touchkit.ui.NavigationManager;
-import com.vaadin.server.Page;
-import com.vaadin.server.Page.UriFragmentChangedEvent;
-import com.vaadin.server.Page.UriFragmentChangedListener;
+import com.vaadin.addon.touchkit.ui.NavigationManager.NavigationEvent.Direction;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.UI;
 
-public class IphoneView extends NavigationManager implements WineView {
+public class IphoneView extends FragmentNavigator implements WineView {
 
 	private static final long serialVersionUID = 8222285875396851695L;
 
-	private boolean maskURIChange = false;
-
 	protected WinePresenter presenter;
-	{
+
+	private BrowseWinePanel comp;
+
+	protected Wine selectedWine;
+
+	public IphoneView() {
 		presenter = new WinePresenter();
 		setSizeFull();
 
@@ -29,45 +29,15 @@ public class IphoneView extends NavigationManager implements WineView {
 
 			@Override
 			public void navigate(NavigationEvent event) {
-				maskURIChange = true;
-				final int newId = getCurrentComponent().hashCode();
-				UI.getCurrent().getPage().setUriFragment(newId + "");
-				maskURIChange = false;
+
+				final boolean currentIsListView = currentInListView();
+				if (event.getDirection() == Direction.BACK && currentIsListView) {
+
+					// refresh wine list
+					presenter.init(IphoneView.this);
+				}
 			}
 		});
-
-		Page.getCurrent().addUriFragmentChangedListener(
-				new UriFragmentChangedListener() {
-
-					private static final long serialVersionUID = -1713918099181690469L;
-
-					@Override
-					public void uriFragmentChanged(UriFragmentChangedEvent event) {
-
-						if (maskURIChange) {
-							return;
-						}
-
-						maskURIChange = true;
-						// user pressed back or forward; determine which
-						try {
-							final int id = Integer.parseInt(event
-									.getUriFragment());
-
-							if (getNextComponent() != null
-									&& getNextComponent().hashCode() == id) {
-								navigateTo(getNextComponent());
-							} else if (getPreviousComponent() != null
-									&& getPreviousComponent().hashCode() == id) {
-								navigateBack();
-							}
-						} catch (final Exception e) {
-							// ignore
-							e.printStackTrace();
-						}
-						maskURIChange = false;
-					}
-				});
 	}
 
 	@Override
@@ -76,15 +46,26 @@ public class IphoneView extends NavigationManager implements WineView {
 		presenter.init(this);
 	}
 
+	protected boolean currentInListView() {
+		return getCurrentComponent() instanceof BrowseWinePanel;
+	}
+
 	@Override
 	public void load(List<Wine> wines, boolean searchResults) {
-		final BrowseWinePanel comp = new BrowseWinePanel(wines, searchResults,
-				presenter);
-		navigateTo(comp);
+
+		if (currentInListView()) {
+			comp.updateTable(wines, searchResults);
+		} else {
+			comp = new BrowseWinePanel(wines, searchResults, presenter);
+			navigateTo(comp);
+		}
+
+		comp.scrollTo(selectedWine);
 	}
 
 	@Override
 	public void showDetails(Wine w) {
+		selectedWine = w;
 		if (getCurrentComponent() instanceof WineDetailsPanel) {
 			navigateBack();
 		}
@@ -92,12 +73,13 @@ public class IphoneView extends NavigationManager implements WineView {
 	}
 
 	@Override
-	public void showError(Exception e) {
-		Notification.show(e.getMessage());
+	public void showError(String msg) {
+		Notification.show(msg);
 	}
 
 	@Override
 	public void showEdit(Wine wine) {
+		selectedWine = wine;
 		navigateTo(new WineDetailsPanel(wine, presenter, true));
 	}
 

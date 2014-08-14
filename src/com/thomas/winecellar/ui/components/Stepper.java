@@ -1,4 +1,4 @@
-package com.thomas.winecellar.ui;
+package com.thomas.winecellar.ui.components;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;

@@ -4,11 +4,13 @@ import java.util.Locale;
 
 import com.thomas.winecellar.data.Wine;
 import com.thomas.winecellar.data.Wine.WineType;
-import com.thomas.winecellar.ui.Stepper;
 import com.thomas.winecellar.ui.WinePresenter;
+import com.thomas.winecellar.ui.components.Stepper;
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.addon.touchkit.ui.NumberField;
 import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
+import com.vaadin.data.Validator.EmptyValueException;
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
@@ -23,6 +25,8 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 
@@ -68,11 +72,12 @@ public class WineDetailsPanel extends NavigationView {
 		});
 
 		Field<?> field = form.buildAndBind("name");
+		field.setCaption("Name *");
 		field.setRequired(true);
 		field.setWidth("100%");
 		root.addComponent(field);
 
-		final ComboBox producer = new ComboBox("Producer");
+		final ComboBox producer = new ComboBox("Producer *");
 		producer.setRequired(true);
 		producer.addItems(presenter.getProducers());
 		producer.setNullSelectionAllowed(false);
@@ -89,13 +94,11 @@ public class WineDetailsPanel extends NavigationView {
 		});
 		form.bind(producer, "producer");
 		producer.setWidth("100%");
-		producer.setRequired(true);
 		root.addComponent(producer);
 
 		final NumberField year = new NumberField("Year");
 		// year.setSelectionRange(1900, 2030);
 		year.setMaxLength(4);
-		year.setRequired(true);
 		form.bind(year, "year");
 		year.setConverter(new StringToIntegerConverter() {
 			private static final long serialVersionUID = 6742590457370097026L;
@@ -113,7 +116,7 @@ public class WineDetailsPanel extends NavigationView {
 		}
 		root.addComponent(year);
 
-		final ComboBox region = new ComboBox("Region");
+		final ComboBox region = new ComboBox("Region *");
 		region.setRequired(true);
 		region.addItems(presenter.getRegions());
 		region.setNullSelectionAllowed(false);
@@ -132,7 +135,7 @@ public class WineDetailsPanel extends NavigationView {
 		region.setWidth("100%");
 		root.addComponent(region);
 
-		final ComboBox country = new ComboBox("Country");
+		final ComboBox country = new ComboBox("Country *");
 		country.setRequired(true);
 		country.addItems(presenter.getCountries());
 		country.setNullSelectionAllowed(false);
@@ -151,7 +154,7 @@ public class WineDetailsPanel extends NavigationView {
 		country.setWidth("100%");
 		root.addComponent(country);
 
-		final NativeSelect type = new NativeSelect("Type");
+		final NativeSelect type = new NativeSelect("Type *");
 		type.setRequired(true);
 		type.setNullSelectionAllowed(false);
 		for (final WineType t : WineType.values()) {
@@ -160,6 +163,11 @@ public class WineDetailsPanel extends NavigationView {
 		form.bind(type, "type");
 		type.setWidth("100%");
 		root.addComponent(type);
+
+		field = form.buildAndBind("grapes");
+		field.setCaption("Grapes");
+		field.setWidth("100%");
+		root.addComponent(field);
 
 		final Stepper amount = new Stepper(0);
 		amount.setCaption("Amount");
@@ -199,6 +207,25 @@ public class WineDetailsPanel extends NavigationView {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				if (editMode) {
+
+					// check presence of all fields manually first
+					for (final Field<?> f : form.getFields()) {
+						try {
+							f.validate();
+						} catch (final InvalidValueException e) {
+							if (e instanceof EmptyValueException) {
+								Notification.show(
+										"Please fill all required fields ("
+												+ f.getCaption() + ")",
+												Type.WARNING_MESSAGE);
+								return;
+							} else {
+								presenter.handleError(e);
+								return;
+							}
+						}
+					}
+
 					try {
 						form.commit();
 						presenter.save(wine);

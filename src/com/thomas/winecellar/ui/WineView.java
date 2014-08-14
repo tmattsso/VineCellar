@@ -10,7 +10,7 @@ public interface WineView {
 
 	public void showDetails(Wine w);
 
-	public void showError(Exception e);
+	public void showError(String string);
 
 	public void showEdit(Wine wine);
 
