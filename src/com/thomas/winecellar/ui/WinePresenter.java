@@ -41,7 +41,9 @@ public class WinePresenter {
 	}
 
 	public void wineSelected(Wine w) {
-		view.showDetails(w);
+		if (w != null) {
+			view.showDetails(w);
+		}
 	}
 
 	public void setComment(Wine w, String comment) {

@@ -18,7 +18,7 @@ public class Backend {
 
 	public static List<Wine> getWines() throws BackendException {
 
-		log.info("loading wines..");
+		log.debug("loading wines..");
 		try {
 			final Connection connection = DBTools.getConnection();
 
@@ -28,7 +28,7 @@ public class Backend {
 
 			final List<Wine> populate = populate(executeQuery);
 
-			log.info("loaded " + populate.size() + " wines.");
+			log.debug("loaded " + populate.size() + " wines.");
 
 			return populate;
 

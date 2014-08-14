@@ -1,1 +1,0 @@
-$wnd.com_thomas_vinecellar_widgetset_VinecellarWidgetset.runAsyncCallback2('kdb(1626,1,BBd);_.nc=function Nmc(){cac((!Z9b&&(Z9b=new dac),Z9b),this.b.e)};Wvd(Vh)(2);\n//# sourceURL=com.thomas.vinecellar.widgetset.VinecellarWidgetset-2.js\n')
