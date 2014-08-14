@@ -60,7 +60,9 @@ public class IphoneView extends FragmentNavigator implements WineView {
 			navigateTo(comp);
 		}
 
-		comp.scrollTo(selectedWine);
+		if (selectedWine != null) {
+			comp.scrollTo(selectedWine);
+		}
 	}
 
 	@Override
