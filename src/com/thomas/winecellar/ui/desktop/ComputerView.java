@@ -19,7 +19,9 @@ public class ComputerView extends IphoneView {
 			navigateTo(wineTablePanel);
 		}
 
-		wineTablePanel.scrollTo(selectedWine);
+		if (selectedWine != null) {
+			wineTablePanel.scrollTo(selectedWine);
+		}
 	}
 
 	@Override

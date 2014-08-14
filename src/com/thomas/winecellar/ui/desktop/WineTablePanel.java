@@ -59,7 +59,12 @@ public class WineTablePanel extends NavigationView {
 			protected String formatPropertyValue(Object rowId, Object colId,
 					Property<?> property) {
 				if (colId.equals("year")) {
-					return property.getValue().toString();
+
+					final Object value = property.getValue();
+					if (value.equals(0)) {
+						return "N/A";
+					}
+					return value.toString();
 				}
 				return super.formatPropertyValue(rowId, colId, property);
 			}

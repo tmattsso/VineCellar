@@ -106,8 +106,24 @@ public class WineDetailsPanel extends NavigationView {
 			@Override
 			public String convertToPresentation(Integer value,
 					Class<? extends String> targetType, Locale locale)
-							throws com.vaadin.data.util.converter.Converter.ConversionException {
+					throws com.vaadin.data.util.converter.Converter.ConversionException {
+				if (value == null) {
+					return null;
+				}
+				if (value.equals(0)) {
+					return "";
+				}
 				return value + "";
+			}
+
+			@Override
+			public Integer convertToModel(String value,
+					Class<? extends Integer> targetType, Locale locale)
+							throws com.vaadin.data.util.converter.Converter.ConversionException {
+				if (value == null || value.isEmpty()) {
+					return 0;
+				}
+				return super.convertToModel(value, targetType, locale);
 			}
 		});
 		year.setWidth("100%");
@@ -217,7 +233,7 @@ public class WineDetailsPanel extends NavigationView {
 								Notification.show(
 										"Please fill all required fields ("
 												+ f.getCaption() + ")",
-												Type.WARNING_MESSAGE);
+										Type.WARNING_MESSAGE);
 								return;
 							} else {
 								presenter.handleError(e);
