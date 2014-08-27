@@ -22,21 +22,31 @@ public class BrowseWinePanel extends NavigationView {
 	private final VerticalLayout main;
 	private final WinePresenter presenter;
 	private VerticalComponentGroup group;
+	private final List<Wine> wines;
 
 	public BrowseWinePanel(List<Wine> wines, boolean searchResults,
 			final WinePresenter presenter) {
 
+		this.wines = wines;
 		this.presenter = presenter;
 		main = new VerticalLayout();
 		setContent(main);
 
 		updateTable(wines, searchResults);
+		updateCaption();
 	}
 
-	@Override
-	public void attach() {
-		super.attach();
+	private void updateCaption() {
+		int numWinesInCellar = 0;
 
+		for (final Wine w : wines) {
+			if (w.getAmount() > 0) {
+				numWinesInCellar += w.getAmount();
+			}
+		}
+
+		getNavigationBar().setCaption(
+				"Winecellar app (" + numWinesInCellar + ")");
 	}
 
 	public void updateTable(List<Wine> wines, boolean searchResults) {
@@ -46,8 +56,9 @@ public class BrowseWinePanel extends NavigationView {
 		main.addComponent(group);
 
 		for (final Wine w : wines) {
-			final NavigationButton c = new NavigationButton(w.getName() + " ("
-					+ w.getYear() + ")");
+			final String year = w.getYear() > 0 ? " (" + w.getYear() + ")"
+					: " (NV)";
+			final NavigationButton c = new NavigationButton(w.getName() + year);
 			c.setData(w);
 			c.addStyleName(BaseTheme.BUTTON_LINK);
 			group.addComponent(c);
@@ -57,7 +68,7 @@ public class BrowseWinePanel extends NavigationView {
 
 				@Override
 				public void buttonClick(NavigationButtonClickEvent event) {
-					setCaption("List");
+					setShortCaption();
 					presenter.wineSelected(w);
 				}
 			});
@@ -78,7 +89,7 @@ public class BrowseWinePanel extends NavigationView {
 		super.onBecomingVisible();
 
 		// reset to long caption
-		getNavigationBar().setCaption("Winecellar App");
+		updateCaption();
 	}
 
 	public void scrollTo(Wine selectedWine) {
@@ -102,6 +113,10 @@ public class BrowseWinePanel extends NavigationView {
 		if (hasElement) {
 			setScrollPosition(numElements * elementSize);
 		}
+	}
+
+	public void setShortCaption() {
+		getNavigationBar().setCaption("List");
 	}
 
 }

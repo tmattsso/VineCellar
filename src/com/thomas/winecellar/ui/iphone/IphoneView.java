@@ -71,6 +71,7 @@ public class IphoneView extends FragmentNavigator implements WineView {
 		if (getCurrentComponent() instanceof WineDetailsPanel) {
 			navigateBack();
 		}
+		comp.setShortCaption();
 		navigateTo(new WineDetailsPanel(w, presenter, false));
 	}
 

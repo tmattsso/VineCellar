@@ -27,9 +27,21 @@ public class WineTablePanel extends NavigationView {
 		this.presenter = presenter;
 		setSizeFull();
 
-		setCaption("Winecellar app");
-
 		updateTable(wines, searchResults);
+
+		updateCaption(wines);
+	}
+
+	private void updateCaption(List<Wine> wines) {
+		int numWinesInCellar = 0;
+
+		for (final Wine w : wines) {
+			if (w.getAmount() > 0) {
+				numWinesInCellar += w.getAmount();
+			}
+		}
+
+		setCaption("Winecellar app (" + numWinesInCellar + ")");
 	}
 
 	public void updateTable(List<Wine> wines, boolean searchResults) {
@@ -62,7 +74,7 @@ public class WineTablePanel extends NavigationView {
 
 					final Object value = property.getValue();
 					if (value.equals(0)) {
-						return "N/A";
+						return "NV";
 					}
 					return value.toString();
 				}
