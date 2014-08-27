@@ -15,7 +15,7 @@ public class IphoneView extends FragmentNavigator implements WineView {
 
 	protected WinePresenter presenter;
 
-	private BrowseWinePanel comp;
+	private BrowseWinePanel listView;
 
 	protected Wine selectedWine;
 
@@ -54,14 +54,14 @@ public class IphoneView extends FragmentNavigator implements WineView {
 	public void load(List<Wine> wines, boolean searchResults) {
 
 		if (currentInListView()) {
-			comp.updateTable(wines, searchResults);
+			listView.updateTable(wines, searchResults);
 		} else {
-			comp = new BrowseWinePanel(wines, searchResults, presenter);
-			navigateTo(comp);
+			listView = new BrowseWinePanel(wines, searchResults, presenter);
+			navigateTo(listView);
 		}
 
 		if (selectedWine != null) {
-			comp.scrollTo(selectedWine);
+			listView.scrollTo(selectedWine);
 		}
 	}
 
@@ -71,7 +71,9 @@ public class IphoneView extends FragmentNavigator implements WineView {
 		if (getCurrentComponent() instanceof WineDetailsPanel) {
 			navigateBack();
 		}
-		comp.setShortCaption();
+		if (listView != null) {
+			listView.setShortCaption();
+		}
 		navigateTo(new WineDetailsPanel(w, presenter, false));
 	}
 

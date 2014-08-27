@@ -1,7 +1,5 @@
 package com.thomas.winecellar.ui.iphone;
 
-import java.util.Locale;
-
 import com.thomas.winecellar.data.Wine;
 import com.thomas.winecellar.data.Wine.WineType;
 import com.thomas.winecellar.ui.WinePresenter;
@@ -17,7 +15,6 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -82,16 +79,6 @@ public class WineDetailsPanel extends NavigationView {
 		producer.addItems(presenter.getProducers());
 		producer.setNullSelectionAllowed(false);
 		producer.setNewItemsAllowed(true);
-		producer.setNewItemHandler(new NewItemHandler() {
-
-			private static final long serialVersionUID = 567953829674037166L;
-
-			@Override
-			public void addNewItem(String newItemCaption) {
-				producer.addItem(newItemCaption);
-				producer.select(newItemCaption);
-			}
-		});
 		form.bind(producer, "producer");
 		producer.setWidth("100%");
 		root.addComponent(producer);
@@ -99,37 +86,14 @@ public class WineDetailsPanel extends NavigationView {
 		final NumberField year = new NumberField("Year");
 		// year.setSelectionRange(1900, 2030);
 		year.setMaxLength(4);
+		year.setConverter(new StringToIntegerConverter());
 		form.bind(year, "year");
-		year.setConverter(new StringToIntegerConverter() {
-			private static final long serialVersionUID = 6742590457370097026L;
-
-			@Override
-			public String convertToPresentation(Integer value,
-					Class<? extends String> targetType, Locale locale)
-					throws com.vaadin.data.util.converter.Converter.ConversionException {
-				if (value == null) {
-					return null;
-				}
-				if (value.equals(0)) {
-					return "";
-				}
-				return value + "";
-			}
-
-			@Override
-			public Integer convertToModel(String value,
-					Class<? extends Integer> targetType, Locale locale)
-							throws com.vaadin.data.util.converter.Converter.ConversionException {
-				if (value == null || value.isEmpty()) {
-					return 0;
-				}
-				return super.convertToModel(value, targetType, locale);
-			}
-		});
 		year.setWidth("100%");
 		if (editMode && wine.getYear() < 1900) {
 			year.setValue("2010");
 		}
+		year.setImmediate(true);
+		year.setValidationVisible(false);
 		root.addComponent(year);
 
 		final ComboBox region = new ComboBox("Region *");
@@ -137,16 +101,6 @@ public class WineDetailsPanel extends NavigationView {
 		region.addItems(presenter.getRegions());
 		region.setNullSelectionAllowed(false);
 		region.setNewItemsAllowed(true);
-		region.setNewItemHandler(new NewItemHandler() {
-
-			private static final long serialVersionUID = 567953829674037166L;
-
-			@Override
-			public void addNewItem(String newItemCaption) {
-				region.addItem(newItemCaption);
-				region.select(newItemCaption);
-			}
-		});
 		form.bind(region, "region");
 		region.setWidth("100%");
 		root.addComponent(region);
@@ -156,16 +110,6 @@ public class WineDetailsPanel extends NavigationView {
 		country.addItems(presenter.getCountries());
 		country.setNullSelectionAllowed(false);
 		country.setNewItemsAllowed(true);
-		country.setNewItemHandler(new NewItemHandler() {
-
-			private static final long serialVersionUID = 567953829674037166L;
-
-			@Override
-			public void addNewItem(String newItemCaption) {
-				country.addItem(newItemCaption);
-				country.select(newItemCaption);
-			}
-		});
 		form.bind(country, "country");
 		country.setWidth("100%");
 		root.addComponent(country);
@@ -233,7 +177,7 @@ public class WineDetailsPanel extends NavigationView {
 								Notification.show(
 										"Please fill all required fields ("
 												+ f.getCaption() + ")",
-										Type.WARNING_MESSAGE);
+												Type.WARNING_MESSAGE);
 								return;
 							} else {
 								presenter.handleError(e);
