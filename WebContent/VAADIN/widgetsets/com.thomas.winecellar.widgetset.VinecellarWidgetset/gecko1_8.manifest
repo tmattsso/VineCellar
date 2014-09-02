@@ -1,0 +1,25 @@
+CACHE MANIFEST
+# Build timeTue Sep 02 15:22:01 EEST 2014
+
+CACHE:
+../../../VAADIN/themes/base/fonts/fontawesome-webfont.woff
+../../../VAADIN/themes/touchkit/styles.css
+../../../VAADIN/vaadinBootstrap.js
+195F8487DC6B49CA7A15821F75AFA461.cache.woff
+52341AC99DD8E23D8E7AA85ED3480222.cache.js
+clear.cache.gif
+com.thomas.winecellar.widgetset.VinecellarWidgetset.devmode.js
+com.thomas.winecellar.widgetset.VinecellarWidgetset.nocache.js
+deferredjs/52341AC99DD8E23D8E7AA85ED3480222/1.cache.js
+deferredjs/52341AC99DD8E23D8E7AA85ED3480222/2.cache.js
+deferredjs/52341AC99DD8E23D8E7AA85ED3480222/3.cache.js
+deferredjs/52341AC99DD8E23D8E7AA85ED3480222/4.cache.js
+deferredjs/52341AC99DD8E23D8E7AA85ED3480222/5.cache.js
+deferredjs/52341AC99DD8E23D8E7AA85ED3480222/6.cache.js
+deferredjs/52341AC99DD8E23D8E7AA85ED3480222/7.cache.js
+deferredjs/52341AC99DD8E23D8E7AA85ED3480222/8.cache.js
+deferredjs/52341AC99DD8E23D8E7AA85ED3480222/9.cache.js
+
+NETWORK:
+*
+

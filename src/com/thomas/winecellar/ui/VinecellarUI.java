@@ -9,17 +9,15 @@ import com.vaadin.addon.touchkit.server.TouchKitServlet;
 import com.vaadin.addon.touchkit.settings.TouchKitSettings;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
 @SuppressWarnings("serial")
 @Theme("winecellar")
-@Widgetset("com.vaadin.addon.touchkit.gwt.TouchKitWidgetSet")
 public class VinecellarUI extends UI {
 
 	@WebServlet(value = "/*")
-	@VaadinServletConfiguration(productionMode = false, ui = VinecellarUI.class)
+	@VaadinServletConfiguration(productionMode = false, ui = VinecellarUI.class, widgetset = "com.thomas.winecellar.widgetset.VinecellarWidgetset")
 	public static class Servlet extends TouchKitServlet {
 
 		@Override
