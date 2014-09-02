@@ -22,7 +22,7 @@ public class Wine {
 				return "Sweet";
 
 			default:
-				return null;
+				return "";
 			}
 		};
 	}
