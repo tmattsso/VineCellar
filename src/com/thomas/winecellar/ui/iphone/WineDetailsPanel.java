@@ -1,5 +1,7 @@
 package com.thomas.winecellar.ui.iphone;
 
+import java.util.Locale;
+
 import com.thomas.winecellar.data.Wine;
 import com.thomas.winecellar.data.Wine.WineType;
 import com.thomas.winecellar.ui.WinePresenter;
@@ -69,12 +71,12 @@ public class WineDetailsPanel extends NavigationView {
 		});
 
 		Field<?> field = form.buildAndBind("name");
-		field.setCaption("Name *");
+		field.setCaption("Name");
 		field.setRequired(true);
 		field.setWidth("100%");
 		root.addComponent(field);
 
-		final ComboBox producer = new ComboBox("Producer *");
+		final ComboBox producer = new ComboBox("Producer");
 		producer.setRequired(true);
 		producer.addItems(presenter.getProducers());
 		producer.setNullSelectionAllowed(false);
@@ -86,7 +88,21 @@ public class WineDetailsPanel extends NavigationView {
 		final NumberField year = new NumberField("Year");
 		// year.setSelectionRange(1900, 2030);
 		year.setMaxLength(4);
-		year.setConverter(new StringToIntegerConverter());
+		year.setConverter(new StringToIntegerConverter() {
+			private static final long serialVersionUID = -4230619886910439441L;
+
+			@Override
+			public Integer convertToModel(String value,
+					Class<? extends Integer> targetType, Locale locale)
+					throws com.vaadin.data.util.converter.Converter.ConversionException {
+				Integer convertToModel = super.convertToModel(value,
+						targetType, locale);
+				if (convertToModel == null) {
+					convertToModel = 0;
+				}
+				return convertToModel;
+			}
+		});
 		form.bind(year, "year");
 		year.setWidth("100%");
 		if (editMode && wine.getYear() < 1900) {
@@ -96,7 +112,7 @@ public class WineDetailsPanel extends NavigationView {
 		year.setValidationVisible(false);
 		root.addComponent(year);
 
-		final ComboBox region = new ComboBox("Region *");
+		final ComboBox region = new ComboBox("Region");
 		region.setRequired(true);
 		region.addItems(presenter.getRegions());
 		region.setNullSelectionAllowed(false);
@@ -105,7 +121,7 @@ public class WineDetailsPanel extends NavigationView {
 		region.setWidth("100%");
 		root.addComponent(region);
 
-		final ComboBox country = new ComboBox("Country *");
+		final ComboBox country = new ComboBox("Country");
 		country.setRequired(true);
 		country.addItems(presenter.getCountries());
 		country.setNullSelectionAllowed(false);
@@ -114,7 +130,7 @@ public class WineDetailsPanel extends NavigationView {
 		country.setWidth("100%");
 		root.addComponent(country);
 
-		final NativeSelect type = new NativeSelect("Type *");
+		final NativeSelect type = new NativeSelect("Type");
 		type.setRequired(true);
 		type.setNullSelectionAllowed(false);
 		for (final WineType t : WineType.values()) {
@@ -177,7 +193,7 @@ public class WineDetailsPanel extends NavigationView {
 								Notification.show(
 										"Please fill all required fields ("
 												+ f.getCaption() + ")",
-												Type.WARNING_MESSAGE);
+										Type.WARNING_MESSAGE);
 								return;
 							} else {
 								presenter.handleError(e);
