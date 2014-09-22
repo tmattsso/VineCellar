@@ -257,4 +257,13 @@ public class Backend {
 		}
 		throw new BackendException();
 	}
+
+	public static User login(String email, String pass) {
+		if ("test".equals(email)) {
+			final User user = new User();
+			user.setEmail(email);
+			return user;
+		}
+		return null;
+	}
 }

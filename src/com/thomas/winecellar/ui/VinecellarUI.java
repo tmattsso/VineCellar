@@ -3,6 +3,7 @@ package com.thomas.winecellar.ui;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 
+import com.thomas.winecellar.data.User;
 import com.thomas.winecellar.ui.desktop.ComputerView;
 import com.thomas.winecellar.ui.iphone.IphoneView;
 import com.vaadin.addon.touchkit.server.TouchKitServlet;
@@ -15,6 +16,9 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 @Theme("winecellar")
 public class VinecellarUI extends UI {
+
+	private boolean isMobile;
+	private User user;
 
 	@WebServlet(value = "/*")
 	@VaadinServletConfiguration(productionMode = false, ui = VinecellarUI.class, widgetset = "com.thomas.winecellar.widgetset.VinecellarWidgetset")
@@ -44,17 +48,28 @@ public class VinecellarUI extends UI {
 	protected void init(VaadinRequest request) {
 
 		final String agent = getPage().getWebBrowser().getBrowserApplication();
-		// System.out.println(agent);
+		isMobile = agent.toLowerCase().contains("iphone")
+				|| agent.contains("GT-I9300");
 
-		getPage().setTitle("WineCellar");
+		getPage().setTitle("WineCellar App");
 
-		if (agent.toLowerCase().contains("iphone")
-				|| agent.contains("GT-I9300")) {
-			setContent(new IphoneView());
-		} else {
-			setContent(new ComputerView());
+		setContent(new LoginView());
+	}
+
+	public static void login(User u) {
+
+		if (u == null) {
+			return;
 		}
 
+		final VinecellarUI ui = (VinecellarUI) getCurrent();
+
+		ui.user = u;
+		if (ui.isMobile) {
+			ui.setContent(new IphoneView());
+		} else {
+			ui.setContent(new ComputerView());
+		}
 	}
 
 }

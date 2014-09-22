@@ -1,9 +1,9 @@
 @import "addons.scss";
-@import "vinecellar.scss";
+@import "winecellar.scss";
 
 /* This file prefixes all rules with the theme name to avoid causing conflicts with other themes. */
 /* The actual styles should be defined in vinecellar.scss */
-.vinecellar {
+.winecellar {
   @include addons;
-  @include vinecellar;
+  @include winecellar;
 }
