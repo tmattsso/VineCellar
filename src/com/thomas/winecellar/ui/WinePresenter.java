@@ -102,4 +102,9 @@ public class WinePresenter {
 			view.showError("Could not search for wines");
 		}
 	}
+
+	public void settingsClicked() {
+		// TODO Auto-generated method stub
+
+	}
 }

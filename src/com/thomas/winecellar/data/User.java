@@ -2,6 +2,7 @@ package com.thomas.winecellar.data;
 
 public class User {
 
+	private int id;
 	private String email;
 
 	public String getEmail() {
@@ -10,5 +11,13 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	void setId(int id) {
+		this.id = id;
 	}
 }

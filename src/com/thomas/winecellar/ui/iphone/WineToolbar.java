@@ -40,5 +40,19 @@ public class WineToolbar extends Toolbar {
 				presenter.searchClicked();
 			}
 		});
+
+		final Button settings = new Button("Settings");
+		settings.setIcon(FontAwesome.GEAR);
+		addComponent(settings);
+
+		settings.addClickListener(new ClickListener() {
+
+			private static final long serialVersionUID = -8983594031510326761L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				presenter.settingsClicked();
+			}
+		});
 	}
 }

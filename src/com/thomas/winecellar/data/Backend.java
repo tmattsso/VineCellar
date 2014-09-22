@@ -266,4 +266,9 @@ public class Backend {
 		}
 		return null;
 	}
+
+	public static User register(String value, String value2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
