@@ -11,7 +11,7 @@ public class DBTools {
 
 	private static final int PORTNUMBER = 5432;
 	private static final String SERVERNAME = "localhost";
-	private static final String DBNAME = "winecellar";
+	private static final String DBNAME = "winecellar2";
 	private static final String USERNAME = "vine";
 	private static final String PASSWORD = "vine";
 
@@ -29,4 +29,5 @@ public class DBTools {
 
 		return conn;
 	}
+
 }

@@ -1,11 +1,14 @@
 package com.thomas.winecellar.data;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +18,9 @@ import com.thomas.winecellar.data.Wine.WineType;
 public class Backend {
 
 	private static Logger log = LogManager.getLogger("Backend");
+
+	final private static char[] hexArray = "0123456789ABCDEF".toCharArray();
+	private static final int HASH_ITERATIONS = 1000;
 
 	public static List<Wine> getWines() throws BackendException {
 
@@ -36,7 +42,7 @@ public class Backend {
 			log.error(e);
 		}
 
-		throw new BackendException();
+		throw new BackendException("Could not load wines");
 	}
 
 	private static List<Wine> populate(ResultSet result) throws SQLException {
@@ -133,7 +139,7 @@ public class Backend {
 		} catch (final SQLException e) {
 			log.error(e);
 
-			throw new BackendException();
+			throw new BackendException("Could not store wine");
 		}
 
 		return w;
@@ -167,7 +173,7 @@ public class Backend {
 			log.error(e);
 		}
 
-		throw new BackendException();
+		throw new BackendException("Could not run query");
 	}
 
 	public static List<String> getProducerList() throws BackendException {
@@ -255,20 +261,102 @@ public class Backend {
 		} catch (final SQLException e) {
 			log.error(e);
 		}
-		throw new BackendException();
+		throw new BackendException("Could not fetch wines");
 	}
 
-	public static User login(String email, String pass) {
-		if ("test".equals(email)) {
-			final User user = new User();
-			user.setEmail(email);
-			return user;
+	public static User login(String email, String pass) throws BackendException {
+		log.debug("loading wines..");
+		try {
+			final Connection connection = DBTools.getConnection();
+
+			final PreparedStatement prepareStatement = connection
+					.prepareStatement("SELECT * FROM appusers WHERE email=?");
+			prepareStatement.setString(1, email);
+			final ResultSet executeQuery = prepareStatement.executeQuery();
+
+			if (!executeQuery.next()) {
+				throw new BackendException("Incorrect email or password");
+			}
+
+			final User u = new User();
+			u.setEmail(executeQuery.getString("email"));
+			u.setHashedPass(executeQuery.getString("hashedpass"));
+
+			final String hash = hash(getSalt(u), pass);
+
+			if (u.getHashedPass().equals(getSalt(u) + hash)) {
+				return u;
+			}
+
+		} catch (final SQLException e) {
+			log.error(e);
+		}
+		throw new BackendException("Incorrect email or password");
+	}
+
+	public static User register(String email, String password)
+			throws BackendException {
+
+		checkValid(email, password);
+		final String salt = UUID.randomUUID().toString()
+				.substring(0, User.SALT_LENGTH_CHARS);
+
+		final String both = salt + hash(salt, password);
+
+		try {
+			final String s = "INSERT INTO appusers VALUES(DEFAULT, ?, ?)";
+			final PreparedStatement prepareStatement = DBTools.getConnection()
+					.prepareStatement(s);
+			prepareStatement.setString(1, email);
+			prepareStatement.setString(2, both);
+
+			prepareStatement.executeUpdate();
+
+		} catch (final SQLException e) {
+			log.error(e);
+			throw new BackendException("Could not register user");
 		}
 		return null;
 	}
 
-	public static User register(String value, String value2) {
-		// TODO Auto-generated method stub
+	private static void checkValid(String email, String password)
+			throws BackendException {
+		if (email == null || email.length() < 6) {
+			throw new BackendException("Email is too short");
+		}
+		if (password == null || password.length() < 7) {
+			throw new BackendException("Password is too short (min. 8 letters)");
+		}
+	}
+
+	private static String getSalt(User u) {
+		return u.getHashedPass().substring(0, User.SALT_LENGTH_CHARS);
+	}
+
+	private static String hash(String salt, String pwd) {
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("SHA-256");
+			md.reset();
+			final byte[] bytes = salt.getBytes();
+			for (int i = 0; i < HASH_ITERATIONS; i++) {
+				md.update(bytes);
+				md.update(pwd.getBytes());
+			}
+			return bytesToHex(md.digest());
+		} catch (final NoSuchAlgorithmException e) {
+			log.error(e);
+		}
 		return null;
+	}
+
+	private static String bytesToHex(byte[] bytes) {
+		final char[] hexChars = new char[bytes.length * 2];
+		for (int j = 0; j < bytes.length; j++) {
+			final int v = bytes[j] & 0xFF;
+			hexChars[j * 2] = hexArray[v >>> 4];
+			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+		}
+		return new String(hexChars);
 	}
 }

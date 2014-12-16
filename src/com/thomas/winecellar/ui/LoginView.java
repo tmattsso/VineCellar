@@ -1,6 +1,7 @@
 package com.thomas.winecellar.ui;
 
 import com.thomas.winecellar.data.Backend;
+import com.thomas.winecellar.data.BackendException;
 import com.thomas.winecellar.data.User;
 import com.vaadin.addon.touchkit.ui.EmailField;
 import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
@@ -76,6 +77,11 @@ public class LoginView extends VerticalLayout {
 		pass2 = new PasswordField("Verify password:");
 		vl.addComponent(pass2);
 
+		errorLabel = new Label();
+		errorLabel.addStyleName("error");
+		errorLabel.setVisible(false);
+		vl.addComponent(errorLabel);
+
 		final Button register = new Button("Finish registration");
 		register.addClickListener(new FinishRegistrationButtonListener());
 		addComponent(register);
@@ -125,15 +131,20 @@ public class LoginView extends VerticalLayout {
 				return;
 			}
 
-			if (passField.getValue() == null
-					|| passField.getValue().equals(pass2.getValue())) {
+			final String value = passField.getValue();
+			final String value2 = pass2.getValue();
+			if (value == null || !value.equals(value2)) {
 				showError("Given passwords do not match");
 				return;
 			}
 
-			final User registeredUser = Backend.register(emailField.getValue(),
-					passField.getValue());
-			VinecellarUI.login(registeredUser);
+			User registeredUser;
+			try {
+				registeredUser = Backend.register(emailField.getValue(), value);
+				VinecellarUI.login(registeredUser);
+			} catch (final BackendException e) {
+				showError(e.getMessage());
+			}
 		}
 	}
 
@@ -145,7 +156,13 @@ public class LoginView extends VerticalLayout {
 		public void buttonClick(ClickEvent event) {
 			final String email = emailField.getValue();
 			final String pass = passField.getValue();
-			final User u = Backend.login(email, pass);
+			User u = null;
+			try {
+				u = Backend.login(email, pass);
+			} catch (final BackendException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			if (u != null) {
 				VinecellarUI.login(u);
