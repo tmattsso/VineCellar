@@ -1,9 +1,28 @@
 @import "addons.scss";
-@import "vinecellar.scss";
 
-/* This file prefixes all rules with the theme name to avoid causing conflicts with other themes. */
-/* The actual styles should be defined in vinecellar.scss */
-.vinecellar {
+.winecellar {
   @include addons;
-  @include vinecellar;
+  
+  
+  .v-table-cell-content-gray {
+  	color: lightgray;
+  }
+  
+  .v-touchkit-navbutton span {
+  	position: absolute;
+  	right: 30px;
+  }
+  
+  .v-touchkit-componentgroup-cell>.v-touchkit-navbutton {
+	padding-right: 75px;
+  }
+  
+  .v-touchkit-navbutton.gray {
+  	color: lightgray;
+  }
+
+  .v-touchkit-verticalcomponentgroup .v-touchkit-navbutton:after {
+	top: 3px;
+  }
+
 }

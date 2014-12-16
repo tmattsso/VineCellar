@@ -17,7 +17,7 @@ import com.vaadin.ui.UI;
 public class VinecellarUI extends UI {
 
 	@WebServlet(value = "/*")
-	@VaadinServletConfiguration(productionMode = false, ui = VinecellarUI.class, widgetset = "com.thomas.winecellar.widgetset.VinecellarWidgetset")
+	@VaadinServletConfiguration(productionMode = false, ui = VinecellarUI.class, widgetset = "com.thomas.winecellar.ui.components.WinecellarWidgetset")
 	public static class Servlet extends TouchKitServlet {
 
 		@Override

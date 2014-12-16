@@ -12,6 +12,7 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.VerticalLayout;
 
 public class WineTablePanel extends NavigationView {
@@ -81,6 +82,18 @@ public class WineTablePanel extends NavigationView {
 				return super.formatPropertyValue(rowId, colId, property);
 			}
 		};
+		wineTable.setCellStyleGenerator(new CellStyleGenerator() {
+
+			@Override
+			public String getStyle(Table source, Object itemId,
+					Object propertyId) {
+				final Wine w = (Wine) itemId;
+				if (w.getAmount() == 0) {
+					return "gray";
+				}
+				return null;
+			}
+		});
 		wineTable.setSizeFull();
 
 		wineTable.setVisibleColumns("type", "name", "year", "region",
@@ -109,7 +122,7 @@ public class WineTablePanel extends NavigationView {
 	public void updateTable(Wine wineToUpdate) {
 		@SuppressWarnings("unchecked")
 		final BeanItemContainer<Wine> container = (BeanItemContainer<Wine>) wineTable
-		.getContainerDataSource();
+				.getContainerDataSource();
 		container.removeItem(wineToUpdate);
 		container.addBean(wineToUpdate);
 
