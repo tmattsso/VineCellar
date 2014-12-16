@@ -60,9 +60,9 @@ public class WinePresenter {
 	public void save(Wine w) {
 		try {
 			w = saveInBackend(w);
-			view.showDetails(w);
+			view.showListing(w);
 		} catch (final BackendException e) {
-			view.showError("Could not get regions");
+			view.showError("Could not save wine");
 		}
 	}
 
@@ -71,7 +71,7 @@ public class WinePresenter {
 	}
 
 	public void addClicked() {
-		view.showEdit(new Wine());
+		view.showDetails(new Wine());
 	}
 
 	public void searchClicked() {

@@ -105,4 +105,15 @@ public class WineTablePanel extends NavigationView {
 	public void scrollTo(Wine selectedWine) {
 		wineTable.setCurrentPageFirstItemId(selectedWine);
 	}
+
+	public void updateTable(Wine wineToUpdate) {
+		@SuppressWarnings("unchecked")
+		final BeanItemContainer<Wine> container = (BeanItemContainer<Wine>) wineTable
+		.getContainerDataSource();
+		container.removeItem(wineToUpdate);
+		container.addBean(wineToUpdate);
+
+		wineTable.refreshRowCache();
+		scrollTo(wineToUpdate);
+	}
 }

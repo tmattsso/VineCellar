@@ -40,6 +40,8 @@ public class VinecellarUI extends UI {
 		}
 	}
 
+	private boolean isMobile;
+
 	@Override
 	protected void init(VaadinRequest request) {
 
@@ -55,6 +57,10 @@ public class VinecellarUI extends UI {
 			setContent(new ComputerView());
 		}
 
+	}
+
+	public static boolean isMobile() {
+		return ((VinecellarUI) getCurrent()).isMobile;
 	}
 
 }

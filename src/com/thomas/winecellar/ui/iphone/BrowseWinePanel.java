@@ -56,22 +56,8 @@ public class BrowseWinePanel extends NavigationView {
 		main.addComponent(group);
 
 		for (final Wine w : wines) {
-			final String year = w.getYear() > 0 ? " (" + w.getYear() + ")"
-					: " (NV)";
-			final NavigationButton c = new NavigationButton(w.getName() + year);
-			c.setData(w);
-			c.addStyleName(BaseTheme.BUTTON_LINK);
+			final NavigationButton c = createWineButton(w);
 			group.addComponent(c);
-			c.addClickListener(new NavigationButtonClickListener() {
-
-				private static final long serialVersionUID = 8866920489370858445L;
-
-				@Override
-				public void buttonClick(NavigationButtonClickEvent event) {
-					setShortCaption();
-					presenter.wineSelected(w);
-				}
-			});
 		}
 
 		if (wines.isEmpty()) {
@@ -82,6 +68,28 @@ public class BrowseWinePanel extends NavigationView {
 		if (!searchResults) {
 			setToolbar(new WineToolbar(presenter));
 		}
+	}
+
+	private NavigationButton createWineButton(final Wine w) {
+		final NavigationButton c = new NavigationButton(getWineCaption(w));
+		c.setData(w);
+		c.addStyleName(BaseTheme.BUTTON_LINK);
+		c.addClickListener(new NavigationButtonClickListener() {
+
+			private static final long serialVersionUID = 8866920489370858445L;
+
+			@Override
+			public void buttonClick(NavigationButtonClickEvent event) {
+				setShortCaption();
+				presenter.wineSelected(w);
+			}
+		});
+		return c;
+	}
+
+	private String getWineCaption(Wine w) {
+		return w.getName()
+				+ (w.getYear() > 0 ? " (" + w.getYear() + ")" : " (NV)");
 	}
 
 	@Override
@@ -117,6 +125,23 @@ public class BrowseWinePanel extends NavigationView {
 
 	public void setShortCaption() {
 		getNavigationBar().setCaption("List");
+	}
+
+	public void updateWineInTable(Wine wineToUpdate) {
+		final Iterator<Component> iterator = group.iterator();
+
+		if (wines.contains(wineToUpdate)) {
+			while (iterator.hasNext()) {
+				final Component next = iterator.next();
+				if (((AbstractComponent) next).getData().equals(wineToUpdate)) {
+					next.setCaption(getWineCaption(wineToUpdate));
+					break;
+				}
+			}
+		} else {
+			final NavigationButton c = createWineButton(wineToUpdate);
+			group.addComponent(c, 0);
+		}
 	}
 
 }
