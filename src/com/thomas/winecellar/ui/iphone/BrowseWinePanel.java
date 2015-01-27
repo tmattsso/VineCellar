@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.thomas.winecellar.data.Wine;
 import com.thomas.winecellar.ui.WinePresenter;
+import com.thomas.winecellar.ui.components.NavigationHTMLButton;
 import com.vaadin.addon.touchkit.ui.NavigationButton;
 import com.vaadin.addon.touchkit.ui.NavigationButton.NavigationButtonClickEvent;
 import com.vaadin.addon.touchkit.ui.NavigationButton.NavigationButtonClickListener;
@@ -14,7 +15,6 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.BaseTheme;
 
 public class BrowseWinePanel extends NavigationView {
 
@@ -33,7 +33,6 @@ public class BrowseWinePanel extends NavigationView {
 		setContent(main);
 
 		updateTable(wines, searchResults);
-		updateCaption();
 	}
 
 	private void updateCaption() {
@@ -56,22 +55,8 @@ public class BrowseWinePanel extends NavigationView {
 		main.addComponent(group);
 
 		for (final Wine w : wines) {
-			final String year = w.getYear() > 0 ? " (" + w.getYear() + ")"
-					: " (NV)";
-			final NavigationButton c = new NavigationButton(w.getName() + year);
-			c.setData(w);
-			c.addStyleName(BaseTheme.BUTTON_LINK);
+			final Component c = createWineButton(w);
 			group.addComponent(c);
-			c.addClickListener(new NavigationButtonClickListener() {
-
-				private static final long serialVersionUID = 8866920489370858445L;
-
-				@Override
-				public void buttonClick(NavigationButtonClickEvent event) {
-					setShortCaption();
-					presenter.wineSelected(w);
-				}
-			});
 		}
 
 		if (wines.isEmpty()) {
@@ -82,6 +67,56 @@ public class BrowseWinePanel extends NavigationView {
 		if (!searchResults) {
 			setToolbar(new WineToolbar(presenter));
 		}
+
+		updateCaption();
+	}
+
+	private Component createWineButton(final Wine w) {
+
+		// final Label content = new Label(getWineCaption(w));
+		// content.setContentMode(ContentMode.HTML);
+		//
+		// final CssLayout layout = new CssLayout(content);
+		// layout.setStyleName("v-touchkit-navbutton");
+		// layout.setData(w);
+		// if (w.getAmount() == 0) {
+		// layout.addStyleName("gray");
+		// }
+		//
+		// layout.addLayoutClickListener(new LayoutClickListener() {
+		//
+		// @Override
+		// public void layoutClick(LayoutClickEvent event) {
+		// setShortCaption();
+		// presenter.wineSelected(w);
+		// }
+		// });
+		//
+		// return layout;
+
+		final NavigationButton c = new NavigationHTMLButton();
+		c.setCaption(getWineCaption(w));
+		c.setData(w);
+		if (w.getAmount() == 0) {
+			c.addStyleName("gray");
+		}
+		c.addClickListener(new NavigationButtonClickListener() {
+
+			private static final long serialVersionUID = 8866920489370858445L;
+
+			@Override
+			public void buttonClick(NavigationButtonClickEvent event) {
+				setShortCaption();
+				presenter.wineSelected(w);
+			}
+		});
+		return c;
+	}
+
+	private String getWineCaption(Wine w) {
+		return w.getName()
+				+ (w.getYear() > 0 ? "<span>(" + w.getYear() + ")</span>"
+						: "<span>(NV)</span>");
 	}
 
 	@Override
@@ -117,6 +152,23 @@ public class BrowseWinePanel extends NavigationView {
 
 	public void setShortCaption() {
 		getNavigationBar().setCaption("List");
+	}
+
+	public void updateWineInTable(Wine wineToUpdate) {
+		final Iterator<Component> iterator = group.iterator();
+
+		if (wines.contains(wineToUpdate)) {
+			while (iterator.hasNext()) {
+				final Component next = iterator.next();
+				if (((AbstractComponent) next).getData().equals(wineToUpdate)) {
+					next.setCaption(getWineCaption(wineToUpdate));
+					break;
+				}
+			}
+		} else {
+			final Component c = createWineButton(wineToUpdate);
+			group.addComponent(c, 0);
+		}
 	}
 
 }

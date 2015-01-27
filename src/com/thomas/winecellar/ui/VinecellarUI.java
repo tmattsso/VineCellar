@@ -17,7 +17,7 @@ import com.vaadin.ui.UI;
 public class VinecellarUI extends UI {
 
 	@WebServlet(value = "/*")
-	@VaadinServletConfiguration(productionMode = false, ui = VinecellarUI.class, widgetset = "com.thomas.winecellar.widgetset.VinecellarWidgetset")
+	@VaadinServletConfiguration(productionMode = false, ui = VinecellarUI.class, widgetset = "com.thomas.winecellar.ui.components.WinecellarWidgetset")
 	public static class Servlet extends TouchKitServlet {
 
 		@Override
@@ -40,6 +40,8 @@ public class VinecellarUI extends UI {
 		}
 	}
 
+	private boolean isMobile;
+
 	@Override
 	protected void init(VaadinRequest request) {
 
@@ -55,6 +57,10 @@ public class VinecellarUI extends UI {
 			setContent(new ComputerView());
 		}
 
+	}
+
+	public static boolean isMobile() {
+		return ((VinecellarUI) getCurrent()).isMobile;
 	}
 
 }

@@ -1,9 +1,8 @@
 package com.thomas.winecellar.ui.iphone;
 
-import java.util.Locale;
-
 import com.thomas.winecellar.data.Wine;
 import com.thomas.winecellar.data.Wine.WineType;
+import com.thomas.winecellar.ui.VinecellarUI;
 import com.thomas.winecellar.ui.WinePresenter;
 import com.thomas.winecellar.ui.components.Stepper;
 import com.vaadin.addon.touchkit.ui.NavigationView;
@@ -15,7 +14,6 @@ import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
@@ -35,18 +33,19 @@ public class WineDetailsPanel extends NavigationView {
 	private FieldGroup form;
 	private final Wine wine;
 	private Button editButton;
-	private boolean editMode;
 
-	public WineDetailsPanel(final Wine w, final WinePresenter presenter,
-			boolean edit) {
+	public WineDetailsPanel(final Wine w, final WinePresenter presenter) {
 
 		wine = w;
-		editMode = edit;
 		setCaption("Edit wine");
 
 		final VerticalLayout main = new VerticalLayout();
 		main.setMargin(true);
 		setContent(main);
+
+		if (VinecellarUI.isMobile()) {
+			main.setWidth("50%");
+		}
 
 		final VerticalComponentGroup root = new VerticalComponentGroup();
 		main.addComponent(root);
@@ -88,26 +87,10 @@ public class WineDetailsPanel extends NavigationView {
 		final NumberField year = new NumberField("Year");
 		// year.setSelectionRange(1900, 2030);
 		year.setMaxLength(4);
-		year.setConverter(new StringToIntegerConverter() {
-			private static final long serialVersionUID = -4230619886910439441L;
-
-			@Override
-			public Integer convertToModel(String value,
-					Class<? extends Integer> targetType, Locale locale)
-					throws com.vaadin.data.util.converter.Converter.ConversionException {
-				Integer convertToModel = super.convertToModel(value,
-						targetType, locale);
-				if (convertToModel == null) {
-					convertToModel = 0;
-				}
-				return convertToModel;
-			}
-		});
+		year.setConverter(new WineYearNumberConverter());
+		year.setInputPrompt("NV");
 		form.bind(year, "year");
 		year.setWidth("100%");
-		if (editMode && wine.getYear() < 1900) {
-			year.setValue("2010");
-		}
 		year.setImmediate(true);
 		year.setValidationVisible(false);
 		root.addComponent(year);
@@ -172,8 +155,8 @@ public class WineDetailsPanel extends NavigationView {
 		field.setWidth("100%");
 		root.addComponent(field);
 
-		editButton = new Button("Edit");
-		editButton.setIcon(FontAwesome.PENCIL);
+		editButton = new Button("Save");
+		editButton.setIcon(FontAwesome.CHECK);
 		setToolbar(editButton);
 
 		editButton.addClickListener(new ClickListener() {
@@ -182,53 +165,35 @@ public class WineDetailsPanel extends NavigationView {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if (editMode) {
 
-					// check presence of all fields manually first
-					for (final Field<?> f : form.getFields()) {
-						try {
-							f.validate();
-						} catch (final InvalidValueException e) {
-							if (e instanceof EmptyValueException) {
-								Notification.show(
-										"Please fill all required fields ("
-												+ f.getCaption() + ")",
-										Type.WARNING_MESSAGE);
-								return;
-							} else {
-								presenter.handleError(e);
-								return;
-							}
+				// check presence of all fields manually first
+				for (final Field<?> f : form.getFields()) {
+					try {
+						f.validate();
+					} catch (final InvalidValueException e) {
+						if (e instanceof EmptyValueException) {
+							Notification.show(
+									"Please fill all required fields ("
+											+ f.getCaption() + ")",
+									Type.WARNING_MESSAGE);
+							return;
+						} else {
+							presenter.handleError(e);
+							return;
 						}
 					}
+				}
 
-					try {
-						form.commit();
-						presenter.save(wine);
-						// TODO remove unnecessary navigation
-					} catch (final CommitException e) {
-						presenter.handleError(e);
-					}
-				} else {
-					edit();
+				try {
+					form.commit();
+					presenter.save(wine);
+					// TODO remove unnecessary navigation
+				} catch (final CommitException e) {
+					presenter.handleError(e);
 				}
 			}
 		});
 
-		if (edit) {
-			edit();
-		} else {
-			form.setReadOnly(true);
-		}
 	}
 
-	private void edit() {
-
-		editMode = true;
-
-		form.setReadOnly(false);
-
-		editButton.setCaption("Save");
-		editButton.setIcon(FontAwesome.CHECK);
-	}
 }

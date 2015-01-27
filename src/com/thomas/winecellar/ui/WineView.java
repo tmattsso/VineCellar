@@ -12,7 +12,7 @@ public interface WineView {
 
 	public void showError(String string);
 
-	public void showEdit(Wine wine);
-
 	public void showSearch();
+
+	public void showListing(Wine wineToUpdate);
 }
