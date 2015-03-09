@@ -1,33 +1,101 @@
 package com.thomas.winecellar.ui;
 
+import javax.servlet.http.Cookie;
+
 import com.thomas.winecellar.data.Backend;
 import com.thomas.winecellar.data.BackendException;
 import com.thomas.winecellar.data.User;
 import com.vaadin.addon.touchkit.ui.EmailField;
+import com.vaadin.addon.touchkit.ui.NumberField;
 import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.server.VaadinService;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.BaseTheme;
 
 public class LoginView extends VerticalLayout {
 
+	private static final String COOKIE_NAME = "WinecellarUser";
 	private static final long serialVersionUID = 333537549844442031L;
 	private EmailField emailField;
-	private PasswordField passField;
+	private NumberField passField;
 	private Label errorLabel;
-	private PasswordField pass2;
+	private NumberField pass2;
 
 	public LoginView() {
 		setMargin(true);
 		setSpacing(true);
-		buildLogin();
+
+		final Cookie user = checkCookieForUser();
+		if (user != null) {
+			buildPinLogin(user);
+		} else {
+			buildLogin();
+		}
+	}
+
+	private void buildPinLogin(Cookie user) {
+		removeAllComponents();
+
+		final VerticalLayout vl = new VerticalLayout();
+		vl.setSpacing(true);
+		addComponent(vl);
+		setComponentAlignment(vl, Alignment.TOP_CENTER);
+
+		final Label u = new Label("Welcome back, " + user.getValue()
+				+ ". Please enter your PIN:");
+		vl.addComponent(u);
+
+		emailField = new EmailField("Email:");
+		emailField.setValue(user.getValue());
+
+		passField = new NumberField();
+		passField.focus();
+		passField.setWidth("100%");
+		vl.addComponent(passField);
+
+		if (!VinecellarUI.isMobile()) {
+			vl.setWidth("50%");
+		}
+
+		errorLabel = new Label();
+		errorLabel.addStyleName("error");
+		errorLabel.setVisible(false);
+		vl.addComponent(errorLabel);
+
+		final Button login = new Button("Login");
+		vl.addComponent(login);
+		login.addClickListener(new LoginButtonListener());
+
+		final Button notUser = new Button("Not " + user.getValue() + "?");
+		vl.addComponent(notUser);
+		notUser.addStyleName(BaseTheme.BUTTON_LINK);
+		notUser.addClickListener(new ClickListener() {
+
+			private static final long serialVersionUID = -8286660897179364572L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				buildLogin();
+			}
+		});
+	}
+
+	private Cookie checkCookieForUser() {
+		for (final Cookie cookie : VaadinService.getCurrentRequest()
+				.getCookies()) {
+			if (cookie.getName().equals(COOKIE_NAME)) {
+				return cookie;
+			}
+		}
+		return null;
 	}
 
 	private void buildLogin() {
@@ -43,7 +111,7 @@ public class LoginView extends VerticalLayout {
 		emailField.focus();
 		vl.addComponent(emailField);
 
-		passField = new PasswordField("Password:");
+		passField = new NumberField("Password:");
 		vl.addComponent(passField);
 
 		errorLabel = new Label();
@@ -71,10 +139,10 @@ public class LoginView extends VerticalLayout {
 		emailField = new EmailField("E-mail:");
 		vl.addComponent(emailField);
 
-		passField = new PasswordField("Password");
+		passField = new NumberField("Password");
 		vl.addComponent(passField);
 
-		pass2 = new PasswordField("Verify password:");
+		pass2 = new NumberField("Verify password:");
 		vl.addComponent(pass2);
 
 		errorLabel = new Label();
@@ -160,12 +228,18 @@ public class LoginView extends VerticalLayout {
 			try {
 				u = Backend.login(email, pass);
 			} catch (final BackendException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println(e.getMessage());
 			}
 
 			if (u != null) {
 				VinecellarUI.login(u);
+
+				final Cookie myCookie = new Cookie(COOKIE_NAME, u.getEmail());
+				myCookie.setMaxAge(60 * 60 * 24 * 7);
+				myCookie.setPath(VaadinService.getCurrentRequest()
+						.getContextPath());
+				VaadinService.getCurrentResponse().addCookie(myCookie);
+
 			} else {
 				showError("Wrong email or password");
 			}

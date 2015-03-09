@@ -324,8 +324,8 @@ public class Backend {
 		if (email == null || email.length() < 6) {
 			throw new BackendException("Email is too short");
 		}
-		if (password == null || password.length() < 7) {
-			throw new BackendException("Password is too short (min. 8 letters)");
+		if (password == null || password.length() < 4) {
+			throw new BackendException("Pin is too short (min. 4 numbers)");
 		}
 	}
 

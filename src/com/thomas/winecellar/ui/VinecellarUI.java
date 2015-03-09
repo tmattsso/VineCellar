@@ -65,11 +65,19 @@ public class VinecellarUI extends UI {
 		final VinecellarUI ui = (VinecellarUI) getCurrent();
 
 		ui.user = u;
-		if (ui.isMobile) {
+		if (VinecellarUI.isMobile()) {
 			ui.setContent(new IphoneView());
 		} else {
 			ui.setContent(new ComputerView());
 		}
+	}
+
+	public static boolean isMobile() {
+		return ((VinecellarUI) getCurrent()).isMobile;
+	}
+
+	public static User getUser() {
+		return ((VinecellarUI) getCurrent()).user;
 	}
 
 }
