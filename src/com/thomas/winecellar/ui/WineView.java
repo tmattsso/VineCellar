@@ -2,6 +2,7 @@ package com.thomas.winecellar.ui;
 
 import java.util.List;
 
+import com.thomas.winecellar.data.User;
 import com.thomas.winecellar.data.Wine;
 
 public interface WineView {
@@ -15,4 +16,7 @@ public interface WineView {
 	public void showEdit(Wine wine);
 
 	public void showSearch();
+
+	public User getUser();
+
 }

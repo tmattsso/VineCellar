@@ -2,8 +2,10 @@ package com.thomas.winecellar.ui.iphone;
 
 import java.util.List;
 
+import com.thomas.winecellar.data.User;
 import com.thomas.winecellar.data.Wine;
 import com.thomas.winecellar.ui.FragmentNavigator;
+import com.thomas.winecellar.ui.VinecellarUI;
 import com.thomas.winecellar.ui.WinePresenter;
 import com.thomas.winecellar.ui.WineView;
 import com.vaadin.addon.touchkit.ui.NavigationManager.NavigationEvent.Direction;
@@ -91,6 +93,11 @@ public class IphoneView extends FragmentNavigator implements WineView {
 	@Override
 	public void showSearch() {
 		navigateTo(new SearchPanel(presenter));
+	}
+
+	@Override
+	public User getUser() {
+		return VinecellarUI.getUser();
 	}
 
 }

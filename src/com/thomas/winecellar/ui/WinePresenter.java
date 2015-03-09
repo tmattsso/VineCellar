@@ -15,7 +15,7 @@ public class WinePresenter {
 	public void init(WineView view) {
 		this.view = view;
 		try {
-			view.load(Backend.getWines(), false);
+			view.load(Backend.getWines(view.getUser()), false);
 		} catch (final BackendException e) {
 			view.showError("couldn't load wines!");
 		}
@@ -67,7 +67,7 @@ public class WinePresenter {
 	}
 
 	private Wine saveInBackend(Wine w) throws BackendException {
-		return Backend.save(w);
+		return Backend.save(w, view.getUser());
 	}
 
 	public void addClicked() {
@@ -96,7 +96,7 @@ public class WinePresenter {
 
 		List<Wine> results;
 		try {
-			results = Backend.getWines(terms);
+			results = Backend.getWines(terms, view.getUser());
 			view.load(results, true);
 		} catch (final BackendException e) {
 			view.showError("Could not search for wines");

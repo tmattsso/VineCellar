@@ -22,14 +22,15 @@ public class Backend {
 	final private static char[] hexArray = "0123456789ABCDEF".toCharArray();
 	private static final int HASH_ITERATIONS = 1000;
 
-	public static List<Wine> getWines() throws BackendException {
+	public static List<Wine> getWines(User u) throws BackendException {
 
 		log.debug("loading wines..");
 		try {
 			final Connection connection = DBTools.getConnection();
 
 			final PreparedStatement prepareStatement = connection
-					.prepareStatement("SELECT * FROM wines ORDER BY name ASC");
+					.prepareStatement("SELECT * FROM wines w WHERE w.user_id=? ORDER BY name ASC");
+			prepareStatement.setInt(1, u.getId());
 			final ResultSet executeQuery = prepareStatement.executeQuery();
 
 			final List<Wine> populate = populate(executeQuery);
@@ -70,7 +71,7 @@ public class Backend {
 		return wines;
 	}
 
-	public static Wine save(Wine w) throws BackendException {
+	public static Wine save(Wine w, User u) throws BackendException {
 
 		try {
 			if (w.getId() != -1) {
@@ -107,7 +108,7 @@ public class Backend {
 
 				final PreparedStatement insert = connection
 						.prepareStatement(
-								"INSERT INTO wines VALUES(?,?,?,?,?,?,?,DEFAULT,?,?,?,?,?)",
+								"INSERT INTO wines VALUES(?,?,?,?,?,?,?,DEFAULT,?,?,?,?,?,?)",
 								java.sql.Statement.RETURN_GENERATED_KEYS);
 
 				int col = 1;
@@ -125,6 +126,8 @@ public class Backend {
 				insert.setString(col++, w.getDrinkUntil());
 				insert.setString(col++, w.getDrinkBest());
 				insert.setString(col++, w.getGrapes());
+
+				insert.setInt(col++, u.getId());
 
 				final int result = insert.executeUpdate();
 
@@ -184,7 +187,7 @@ public class Backend {
 		return getStringList("area");
 	}
 
-	public static List<Wine> getWines(SearchTerms terms)
+	public static List<Wine> getWines(SearchTerms terms, User u)
 			throws BackendException {
 
 		try {
@@ -192,9 +195,6 @@ public class Backend {
 
 			String sql = "SELECT * FROM wines ";
 
-			if (terms.isChanged()) {
-				sql += "WHERE ";
-			}
 			if (terms.text != null && terms.text.length() > 0) {
 				sql += "(lower(name) LIKE ? " + "OR lower(area) LIKE ? "
 						+ "OR lower(country) LIKE ? "
@@ -220,10 +220,10 @@ public class Backend {
 				sql += "year<=? AND ";
 			}
 
+			sql += " w.user_id=?";
+
 			// trim last 'and' and sort
-			if (terms.isChanged()) {
-				sql = sql.substring(0, sql.length() - 4) + " ORDER BY name ASC";
-			}
+			sql += " ORDER BY name ASC";
 
 			final PreparedStatement prepareStatement = connection
 					.prepareStatement(sql);
@@ -254,6 +254,7 @@ public class Backend {
 			if (terms.yearmax != -1) {
 				prepareStatement.setInt(param++, terms.yearmax);
 			}
+			prepareStatement.setInt(param++, u.getId());
 
 			final ResultSet executeQuery = prepareStatement.executeQuery();
 			return populate(executeQuery);
@@ -281,6 +282,7 @@ public class Backend {
 			final User u = new User();
 			u.setEmail(executeQuery.getString("email"));
 			u.setHashedPass(executeQuery.getString("hashedpass"));
+			u.setId(executeQuery.getInt("id"));
 
 			final String hash = hash(getSalt(u), pass);
 
@@ -306,17 +308,20 @@ public class Backend {
 		try {
 			final String s = "INSERT INTO appusers VALUES(DEFAULT, ?, ?)";
 			final PreparedStatement prepareStatement = DBTools.getConnection()
-					.prepareStatement(s);
+					.prepareStatement(s,
+							java.sql.Statement.RETURN_GENERATED_KEYS);
+
 			prepareStatement.setString(1, email);
 			prepareStatement.setString(2, both);
 
 			prepareStatement.executeUpdate();
 
+			return login(email, password);
+
 		} catch (final SQLException e) {
 			log.error(e);
 			throw new BackendException("Could not register user");
 		}
-		return null;
 	}
 
 	private static void checkValid(String email, String password)
