@@ -1,16 +1,17 @@
-/* Import the reindeer theme.*/
-/* This only allows us to use the mixins defined in it and does not add any styles by itself. */
-/* @import "../reindeer/reindeer.scss"; */
+/* builds on Touchkit theme, imported in GWT and not here. */
 
-/* This contains all of your theme.*/
-/* If somebody wants to extend the theme she will include this mixin. */
 @mixin winecellar {
-  /* Include all the styles from the reindeer theme */
- /*  @include reindeer; */
 
-  /* Insert your theme rules here */
   
   .v-label-error {
   	color: #cc0000;
+  }
+  
+  .v-touchkit-componentgroup-row-full>.v-touchkit-componentgroup-cell {
+  	flex-grow: 5;
+  }
+  
+  .v-touchkit-componentgroup-row-full>.v-caption {
+  	flex-grow: 2;
   }
 }

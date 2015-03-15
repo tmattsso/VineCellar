@@ -48,7 +48,6 @@ public class VinecellarUI extends UI {
 	protected void init(VaadinRequest request) {
 
 		final int windowWidth = getPage().getBrowserWindowWidth();
-		System.out.println(windowWidth);
 
 		// most phones have smaller viewport than this.
 		isMobile = windowWidth <= 720;
