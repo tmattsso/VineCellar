@@ -29,7 +29,7 @@ public class Backend {
 			final Connection connection = DBTools.getConnection();
 
 			final PreparedStatement prepareStatement = connection
-					.prepareStatement("SELECT * FROM wines w WHERE w.user_id=? ORDER BY name ASC");
+					.prepareStatement("SELECT * FROM wines w WHERE w.user_id=? AND w.amount>0 ORDER BY name ASC");
 			prepareStatement.setInt(1, u.getId());
 			final ResultSet executeQuery = prepareStatement.executeQuery();
 
@@ -193,7 +193,7 @@ public class Backend {
 		try {
 			final Connection connection = DBTools.getConnection();
 
-			String sql = "SELECT * FROM wines ";
+			String sql = "SELECT * FROM wines WHERE ";
 
 			if (terms.text != null && terms.text.length() > 0) {
 				sql += "(lower(name) LIKE ? " + "OR lower(area) LIKE ? "
@@ -220,7 +220,11 @@ public class Backend {
 				sql += "year<=? AND ";
 			}
 
-			sql += " w.user_id=?";
+			if (!terms.includeZeros) {
+				sql += "amount>? AND ";
+			}
+
+			sql += " user_id=?";
 
 			// trim last 'and' and sort
 			sql += " ORDER BY name ASC";
@@ -253,6 +257,9 @@ public class Backend {
 			}
 			if (terms.yearmax != -1) {
 				prepareStatement.setInt(param++, terms.yearmax);
+			}
+			if (!terms.includeZeros) {
+				prepareStatement.setInt(param++, 0);
 			}
 			prepareStatement.setInt(param++, u.getId());
 
@@ -369,25 +376,29 @@ public class Backend {
 			throws BackendException {
 
 		final String hash = hash(getSalt(user), current);
-		if (hash.equals(user.getHashedPass())) {
-			user.setHashedPass(hash(getSalt(user), newpin));
-			try {
-				final Connection connection = DBTools.getConnection();
+		final boolean pinsEqual = hash.equals(user.getHashedPass());
 
-				final PreparedStatement prepareStatement = connection
-						.prepareStatement("UPDATE appusers SET "
-								+ "hashedpass=?" + " WHERE id=?");
+		if (!pinsEqual) {
+			throw new BackendException("Current pin not correct");
+		}
 
-				int col = 1;
-				prepareStatement.setString(col++, hash(getSalt(user), newpin));
-				prepareStatement.setInt(col++, user.getId());
+		user.setHashedPass(hash(getSalt(user), newpin));
+		try {
+			final Connection connection = DBTools.getConnection();
 
-				prepareStatement.executeUpdate();
+			final PreparedStatement prepareStatement = connection
+					.prepareStatement("UPDATE appusers SET " + "hashedpass=?"
+							+ " WHERE id=?");
 
-			} catch (final SQLException e) {
-				log.error(e.getMessage());
-				throw new BackendException("Couldn't change PIN");
-			}
+			int col = 1;
+			prepareStatement.setString(col++, hash(getSalt(user), newpin));
+			prepareStatement.setInt(col++, user.getId());
+
+			prepareStatement.executeUpdate();
+
+		} catch (final SQLException e) {
+			log.error(e.getMessage());
+			throw new BackendException("Couldn't change PIN");
 		}
 	}
 }

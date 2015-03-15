@@ -14,6 +14,8 @@ public class SearchTerms {
 
 	public WineType type;
 
+	public boolean includeZeros;
+
 	public boolean isChanged() {
 		return text != null || country != null || region != null
 				|| producer != null || type != null || yearmin != -1

@@ -47,9 +47,11 @@ public class VinecellarUI extends UI {
 	@Override
 	protected void init(VaadinRequest request) {
 
-		final String agent = getPage().getWebBrowser().getBrowserApplication();
-		isMobile = agent.toLowerCase().contains("iphone")
-				|| agent.contains("GT-I9300");
+		final int windowWidth = getPage().getBrowserWindowWidth();
+		System.out.println(windowWidth);
+
+		// most phones have smaller viewport than this.
+		isMobile = windowWidth <= 720;
 
 		getPage().setTitle("WineCellar App");
 

@@ -28,7 +28,7 @@ public class ChangePinPanel extends NavigationView {
 		new1.setWidth("100%");
 		root.addComponent(new1);
 
-		final NumberField new2 = new NumberField("New PIN");
+		final NumberField new2 = new NumberField("Confirm PIN");
 		new2.setWidth("100%");
 		root.addComponent(new2);
 

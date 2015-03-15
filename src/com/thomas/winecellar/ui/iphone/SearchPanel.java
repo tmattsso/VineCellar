@@ -11,6 +11,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
@@ -25,6 +26,7 @@ public class SearchPanel extends NavigationView {
 
 		final VerticalLayout root = new VerticalLayout();
 		root.setMargin(true);
+		root.setSpacing(true);
 		setContent(root);
 
 		setCaption("Search");
@@ -77,6 +79,10 @@ public class SearchPanel extends NavigationView {
 		max.setWidth(5, Unit.EM);
 		hl.addComponent(max);
 
+		final CheckBox includeZeros = new CheckBox(
+				"Include wines not in cellar");
+		root.addComponent(includeZeros);
+
 		final Button b = new Button("Get results");
 		b.setIcon(FontAwesome.SEARCH);
 		setToolbar(b);
@@ -94,6 +100,7 @@ public class SearchPanel extends NavigationView {
 				terms.region = (String) area.getValue();
 				terms.producer = (String) producer.getValue();
 				terms.type = (WineType) type.getValue();
+				terms.includeZeros = includeZeros.getValue();
 
 				if (min.getValue() != null && min.getValue().length() > 1) {
 					terms.yearmin = ParseUtil.getInt(min.getValue());
