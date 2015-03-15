@@ -1,0 +1,11 @@
+.winecellar .v-label-error {
+	color: #cc0000;
+}
+
+.winecellar .v-touchkit-componentgroup-row-full > .v-touchkit-componentgroup-cell {
+	flex-grow: 5;
+}
+
+.winecellar .v-touchkit-componentgroup-row-full > .v-caption {
+	flex-grow: 2;
+}

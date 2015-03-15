@@ -122,7 +122,7 @@ public class Backend {
 				insert.setInt(col++, w.getYear());
 
 				insert.setString(col++, w.getRegion());
-				insert.setString(col++, w.getDrinkBest());
+				insert.setString(col++, w.getDrinkFrom());
 				insert.setString(col++, w.getDrinkUntil());
 				insert.setString(col++, w.getDrinkBest());
 				insert.setString(col++, w.getGrapes());

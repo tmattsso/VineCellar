@@ -21,7 +21,7 @@ public class VinecellarUI extends UI {
 	private User user;
 
 	@WebServlet(value = "/*")
-	@VaadinServletConfiguration(productionMode = false, ui = VinecellarUI.class, widgetset = "com.thomas.winecellar.widgetset.VinecellarWidgetset")
+	@VaadinServletConfiguration(productionMode = true, ui = VinecellarUI.class, widgetset = "com.thomas.winecellar.widgetset.VinecellarWidgetset")
 	public static class Servlet extends TouchKitServlet {
 
 		@Override
@@ -46,6 +46,16 @@ public class VinecellarUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest request) {
+
+		// if (request.getParameter("migrate") != null) {
+		// try {
+		// Migrator.run();
+		// } catch (final Exception e) {
+		// e.printStackTrace();
+		// setContent(new Label(e.getMessage()));
+		// }
+		// return;
+		// }
 
 		final int windowWidth = getPage().getBrowserWindowWidth();
 
