@@ -15,17 +15,21 @@ public class ChangePinPanel extends NavigationView {
 
 		final VerticalLayout root = new VerticalLayout();
 		root.setMargin(true);
+		root.setSpacing(true);
 		setContent(root);
 
 		setCaption("Change PIN:");
 
 		final NumberField current = new NumberField("Current PIN");
+		current.setWidth("100%");
 		root.addComponent(current);
 
 		final NumberField new1 = new NumberField("New PIN");
+		new1.setWidth("100%");
 		root.addComponent(new1);
 
 		final NumberField new2 = new NumberField("New PIN");
+		new2.setWidth("100%");
 		root.addComponent(new2);
 
 		final Button b = new Button("Change");

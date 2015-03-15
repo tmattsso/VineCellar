@@ -72,6 +72,7 @@ public class LoginView extends VerticalLayout {
 
 		final Button login = new Button("Login");
 		vl.addComponent(login);
+		login.setClickShortcut(KeyCode.ENTER);
 		login.addClickListener(new LoginButtonListener());
 
 		final Button notUser = new Button("Not " + user.getValue() + "?");

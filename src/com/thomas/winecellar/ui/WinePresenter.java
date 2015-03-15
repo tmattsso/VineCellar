@@ -111,6 +111,7 @@ public class WinePresenter {
 	public void changePin(User user, String value, String value2) {
 		try {
 			Backend.changePin(user, value, value2);
+			view.showSettings();
 		} catch (final BackendException e) {
 			view.showError(e.getMessage());
 		}
