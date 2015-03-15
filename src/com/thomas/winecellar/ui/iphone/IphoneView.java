@@ -100,4 +100,9 @@ public class IphoneView extends FragmentNavigator implements WineView {
 		return VinecellarUI.getUser();
 	}
 
+	@Override
+	public void showSettings() {
+		navigateTo(new SettingsPanel(presenter));
+	}
+
 }

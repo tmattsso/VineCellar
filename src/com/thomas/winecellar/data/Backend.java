@@ -364,4 +364,30 @@ public class Backend {
 		}
 		return new String(hexChars);
 	}
+
+	public static void changePin(User user, String current, String newpin)
+			throws BackendException {
+
+		final String hash = hash(getSalt(user), current);
+		if (hash.equals(user.getHashedPass())) {
+			user.setHashedPass(hash(getSalt(user), newpin));
+			try {
+				final Connection connection = DBTools.getConnection();
+
+				final PreparedStatement prepareStatement = connection
+						.prepareStatement("UPDATE appusers SET "
+								+ "hashedpass=?" + " WHERE id=?");
+
+				int col = 1;
+				prepareStatement.setString(col++, hash(getSalt(user), newpin));
+				prepareStatement.setInt(col++, user.getId());
+
+				prepareStatement.executeUpdate();
+
+			} catch (final SQLException e) {
+				log.error(e.getMessage());
+				throw new BackendException("Couldn't change PIN");
+			}
+		}
+	}
 }

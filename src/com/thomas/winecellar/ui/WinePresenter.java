@@ -6,6 +6,7 @@ import java.util.List;
 import com.thomas.winecellar.data.Backend;
 import com.thomas.winecellar.data.BackendException;
 import com.thomas.winecellar.data.SearchTerms;
+import com.thomas.winecellar.data.User;
 import com.thomas.winecellar.data.Wine;
 
 public class WinePresenter {
@@ -104,7 +105,14 @@ public class WinePresenter {
 	}
 
 	public void settingsClicked() {
-		// TODO Auto-generated method stub
+		view.showSettings();
+	}
 
+	public void changePin(User user, String value, String value2) {
+		try {
+			Backend.changePin(user, value, value2);
+		} catch (final BackendException e) {
+			view.showError(e.getMessage());
+		}
 	}
 }

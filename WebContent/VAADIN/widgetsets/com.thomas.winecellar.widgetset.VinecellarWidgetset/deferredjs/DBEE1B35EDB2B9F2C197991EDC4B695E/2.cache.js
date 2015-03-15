@@ -1,0 +1,1 @@
+$wnd.com_thomas_winecellar_widgetset_VinecellarWidgetset.runAsyncCallback2('qfb(2010,1,rOd);_.rc=function fuc(){sgc((!mgc&&(mgc=new ugc),mgc),this.b.e)};iGd(Vh)(2);\n//# sourceURL=com.thomas.winecellar.widgetset.VinecellarWidgetset-2.js\n')

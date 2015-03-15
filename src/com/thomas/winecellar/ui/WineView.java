@@ -19,4 +19,6 @@ public interface WineView {
 
 	public User getUser();
 
+	public void showSettings();
+
 }
