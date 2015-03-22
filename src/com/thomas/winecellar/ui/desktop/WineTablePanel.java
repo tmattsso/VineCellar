@@ -103,6 +103,8 @@ public class WineTablePanel extends NavigationView {
 	}
 
 	public void scrollTo(Wine selectedWine) {
-		wineTable.setCurrentPageFirstItemId(selectedWine);
+		if (wineTable != null) {
+			wineTable.setCurrentPageFirstItemId(selectedWine);
+		}
 	}
 }

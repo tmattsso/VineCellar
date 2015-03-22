@@ -94,13 +94,20 @@ public class WineDetailsPanel extends NavigationView {
 			@Override
 			public Integer convertToModel(String value,
 					Class<? extends Integer> targetType, Locale locale)
-					throws com.vaadin.data.util.converter.Converter.ConversionException {
+							throws com.vaadin.data.util.converter.Converter.ConversionException {
 				Integer convertToModel = super.convertToModel(value,
 						targetType, locale);
 				if (convertToModel == null) {
 					convertToModel = 0;
 				}
 				return convertToModel;
+			}
+
+			@Override
+			public String convertToPresentation(Integer value,
+					Class<? extends String> targetType, Locale locale)
+							throws com.vaadin.data.util.converter.Converter.ConversionException {
+				return "" + value;
 			}
 		});
 		form.bind(year, "year");
@@ -193,7 +200,7 @@ public class WineDetailsPanel extends NavigationView {
 								Notification.show(
 										"Please fill all required fields ("
 												+ f.getCaption() + ")",
-										Type.WARNING_MESSAGE);
+												Type.WARNING_MESSAGE);
 								return;
 							} else {
 								presenter.handleError(e);
