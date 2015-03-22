@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,6 +65,7 @@ public class Backend {
 			w.setDrinkUntil(result.getString("drinklast"));
 			w.setDrinkBest(result.getString("drinkbest"));
 			w.setGrapes(result.getString("grapes"));
+			w.setAppellation(result.getString("appellation"));
 			w.setType(WineType.values()[result.getInt("type")]);
 			wines.add(w);
 		}
@@ -82,7 +84,8 @@ public class Backend {
 						.prepareStatement("UPDATE wines SET "
 								+ "name=?, comment=?, producer=?, type=?, amount=?, "
 								+ "country=?, year=?, area=?, drinkfrom=?, drinklast=?, "
-								+ "drinkbest=?, grapes=?" + " WHERE id=?");
+								+ "drinkbest=?, grapes=?, appellation=?"
+								+ " WHERE id=?");
 
 				int col = 1;
 				prepareStatement.setString(col++, w.getName());
@@ -97,6 +100,7 @@ public class Backend {
 				prepareStatement.setString(col++, w.getDrinkUntil());
 				prepareStatement.setString(col++, w.getDrinkBest());
 				prepareStatement.setString(col++, w.getGrapes());
+				prepareStatement.setString(col++, w.getAppellation());
 
 				prepareStatement.setInt(col++, w.getId());
 
@@ -108,7 +112,7 @@ public class Backend {
 
 				final PreparedStatement insert = connection
 						.prepareStatement(
-								"INSERT INTO wines VALUES(?,?,?,?,?,?,?,DEFAULT,?,?,?,?,?,?)",
+								"INSERT INTO wines VALUES(?,?,?,?,?,?,?,DEFAULT,?,?,?,?,?,?,?)",
 								java.sql.Statement.RETURN_GENERATED_KEYS);
 
 				int col = 1;
@@ -128,6 +132,8 @@ public class Backend {
 				insert.setString(col++, w.getGrapes());
 
 				insert.setInt(col++, u.getId());
+
+				insert.setString(col++, w.getAppellation());
 
 				final int result = insert.executeUpdate();
 
@@ -199,6 +205,7 @@ public class Backend {
 				sql += "(lower(name) LIKE ? " + "OR lower(area) LIKE ? "
 						+ "OR lower(country) LIKE ? "
 						+ "OR lower(comment) LIKE ? "
+						+ "OR lower(appellation) LIKE ? "
 						+ "OR lower(producer) LIKE ?) " + "AND ";
 			}
 			if (terms.region != null) {
@@ -209,6 +216,9 @@ public class Backend {
 			}
 			if (terms.producer != null) {
 				sql += "producer=? AND ";
+			}
+			if (terms.appellation != null) {
+				sql += "appellation=? AND ";
 			}
 			if (terms.type != null) {
 				sql += "type=? AND ";
@@ -239,6 +249,7 @@ public class Backend {
 				prepareStatement.setString(param++, "%" + terms.text + "%");
 				prepareStatement.setString(param++, "%" + terms.text + "%");
 				prepareStatement.setString(param++, "%" + terms.text + "%");
+				prepareStatement.setString(param++, "%" + terms.text + "%");
 			}
 			if (terms.region != null) {
 				prepareStatement.setString(param++, terms.region);
@@ -248,6 +259,9 @@ public class Backend {
 			}
 			if (terms.producer != null) {
 				prepareStatement.setString(param++, terms.producer);
+			}
+			if (terms.appellation != null) {
+				prepareStatement.setString(param++, terms.appellation);
 			}
 			if (terms.type != null) {
 				prepareStatement.setInt(param++, terms.type.ordinal());
@@ -267,6 +281,7 @@ public class Backend {
 			return populate(executeQuery);
 
 		} catch (final SQLException e) {
+			e.printStackTrace();
 			log.error(e);
 		}
 		throw new BackendException("Could not fetch wines");
@@ -400,5 +415,9 @@ public class Backend {
 			log.error(e.getMessage());
 			throw new BackendException("Couldn't change PIN");
 		}
+	}
+
+	public static Collection<?> getAppellationList() throws BackendException {
+		return getStringList("appellation");
 	}
 }

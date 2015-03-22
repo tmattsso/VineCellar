@@ -47,6 +47,11 @@ public class SearchPanel extends NavigationView {
 		producer.setWidth("100%");
 		root.addComponent(producer);
 
+		final NativeSelect appellation = new NativeSelect("Appellation",
+				presenter.getAppellations());
+		appellation.setWidth("100%");
+		root.addComponent(appellation);
+
 		final NativeSelect area = new NativeSelect("Region",
 				presenter.getRegions());
 		area.setWidth("100%");
@@ -99,6 +104,7 @@ public class SearchPanel extends NavigationView {
 				terms.country = (String) country.getValue();
 				terms.region = (String) area.getValue();
 				terms.producer = (String) producer.getValue();
+				terms.appellation = (String) appellation.getValue();
 				terms.type = (WineType) type.getValue();
 				terms.includeZeros = includeZeros.getValue();
 

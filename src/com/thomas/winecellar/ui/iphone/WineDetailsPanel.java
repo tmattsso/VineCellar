@@ -128,6 +128,13 @@ public class WineDetailsPanel extends NavigationView {
 		region.setWidth("100%");
 		root.addComponent(region);
 
+		final ComboBox appellation = new ComboBox("Appellation");
+		appellation.addItems(presenter.getAppellations());
+		appellation.setNewItemsAllowed(true);
+		form.bind(appellation, "appellation");
+		appellation.setWidth("100%");
+		root.addComponent(appellation);
+
 		final ComboBox country = new ComboBox("Country");
 		country.setRequired(true);
 		country.addItems(presenter.getCountries());

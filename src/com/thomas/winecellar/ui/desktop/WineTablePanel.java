@@ -84,8 +84,8 @@ public class WineTablePanel extends NavigationView {
 		wineTable.setSizeFull();
 
 		wineTable.setVisibleColumns("type", "name", "year", "region",
-				"country", "producer", "amount", "drinkFrom", "drinkUntil",
-				"drinkBest", "grapes", "comment");
+				"appellation", "country", "producer", "amount", "drinkFrom",
+				"drinkUntil", "drinkBest", "grapes", "comment");
 		wineTable.setColumnWidth("comment", 200);
 
 		root.addComponent(wineTable);

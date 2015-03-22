@@ -8,6 +8,7 @@ public class SearchTerms {
 	public String country;
 	public String region;
 	public String producer;
+	public String appellation;
 
 	public int yearmin = -1;
 	public int yearmax = -1;

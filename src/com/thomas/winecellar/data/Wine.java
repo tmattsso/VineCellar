@@ -33,6 +33,7 @@ public class Wine {
 	private String producer;
 	private String comment;
 	private String region;
+	private String appellation;
 	private String country;
 	private WineType type;
 	private int amount = 0;
@@ -159,5 +160,13 @@ public class Wine {
 
 	public void setYear(int year) {
 		this.year = year;
+	}
+
+	public String getAppellation() {
+		return appellation;
+	}
+
+	public void setAppellation(String appellation) {
+		this.appellation = appellation;
 	}
 }

@@ -1,6 +1,7 @@
 package com.thomas.winecellar.ui;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.thomas.winecellar.data.Backend;
@@ -115,5 +116,15 @@ public class WinePresenter {
 		} catch (final BackendException e) {
 			view.showError(e.getMessage());
 		}
+	}
+
+	public Collection<?> getAppellations() {
+		try {
+			return Backend.getAppellationList();
+		} catch (final BackendException e) {
+			view.showError("couldn't load appellations");
+			e.printStackTrace();
+		}
+		return new ArrayList<String>();
 	}
 }
