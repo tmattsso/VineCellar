@@ -9,3 +9,7 @@
 .winecellar .v-touchkit-componentgroup-row-full > .v-caption {
 	flex-grow: 2;
 }
+
+.winecellar .v-touchkit-navview-toolbar {
+	z-index: 0;
+}

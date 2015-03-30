@@ -90,10 +90,12 @@ public class LoginView extends VerticalLayout {
 	}
 
 	private Cookie checkCookieForUser() {
-		for (final Cookie cookie : VaadinService.getCurrentRequest()
-				.getCookies()) {
-			if (cookie.getName().equals(COOKIE_NAME)) {
-				return cookie;
+		final Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
+		if (cookies != null) {
+			for (final Cookie cookie : cookies) {
+				if (cookie.getName().equals(COOKIE_NAME)) {
+					return cookie;
+				}
 			}
 		}
 		return null;
